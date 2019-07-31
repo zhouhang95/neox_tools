@@ -30,16 +30,16 @@ def get_parser():
 def saveobj(model, filename):
     with open(filename + '.obj', 'w') as f:
         f.write('o {}\n'.format(filename))
-        
+
         mesh_vertex_counter = 0
         mesh_face_counter = 0
-        
+
         for mesh_i in range(len(model['mesh'])):
             mesh_vertex_counter_end = mesh_vertex_counter + model['mesh'][mesh_i][0]
             mesh_face_counter_end = mesh_face_counter + model['mesh'][mesh_i][1]
             if len(model['mesh']) > 1:
                 f.write('g mesh{}\n'.format(mesh_i))
-        
+
             for x, y, z in model['position']:
                 f.write('v {} {} {}\n'.format(-x, y, z))
             for x, y, z in model['normal']:
@@ -47,7 +47,11 @@ def saveobj(model, filename):
             for u, v in model['uv']:
                 f.write('vt {} {}\n'.format(u, 1-v))
             for v1, v2, v3 in model['face']:
-                f.write('f {} {} {}\n'.format(v2+1, v1+1, v3+1))
+                f.write('f {}/{}/{} {}/{}/{} {}/{}/{}\n'.format(
+                    v2+1,v2+1,v2+1,
+                    v1+1,v1+1,v1+1,
+                    v3+1,v3+1,v3+1
+                ))
 
 def saveiqe(model, filename):
     with open(filename + '.iqe ', 'w') as f:
@@ -61,7 +65,7 @@ def saveiqe(model, filename):
             if p not in parent_child_dict:
                 parent_child_dict[p] = []
             parent_child_dict[p].append(i)
-        
+
         def print_joint(index, parent_index):
             f.write('joint "{}" {}\n'.format(model['bone_name'][index], parent_index))
             x, y, z = model['bone_translate'][index]
@@ -83,10 +87,10 @@ def saveiqe(model, filename):
 
         f.write('\n')
 
-        
+
         mesh_vertex_counter = 0
         mesh_face_counter = 0
-        
+
         for mesh_i in range(len(model['mesh'])):
 
             mesh_vertex_counter_end = mesh_vertex_counter + model['mesh'][mesh_i][0]
@@ -102,12 +106,12 @@ def saveiqe(model, filename):
                 f.write('vp {} {} {}\n'.format(-x, y, z))
             f.write('\n')
 
-            
+
             for i in range(mesh_vertex_counter, mesh_vertex_counter_end):
                 x, y, z = model['normal'][i]
                 f.write('vn {} {} {}\n'.format(-x, y, z))
             f.write('\n')
-            
+
             for i in range(mesh_vertex_counter, mesh_vertex_counter_end):
                 u, v = model['uv'][i]
                 f.write('vt {} {}\n'.format(u, 1-v))
@@ -132,7 +136,7 @@ def saveiqe(model, filename):
                 v3 -= mesh_vertex_counter
                 f.write('fm {} {} {}\n'.format(v3, v1, v2))
             f.write('\n')
-            
+
             mesh_vertex_counter = mesh_vertex_counter_end
             mesh_face_counter = mesh_face_counter_end
 
@@ -141,7 +145,7 @@ def savepmx(model, filename):
     pmx_model.english_name = u'Empty model'
     pmx_model.comment = u'NeoX Model Converterで生成'
     pmx_model.english_comment = u'Created by NeoX Model Converter.'
-    
+
     parent_child_dict = {}
     old2new = {}
     index_pool = [-1]
@@ -161,7 +165,7 @@ def savepmx(model, filename):
                 position=common.Vector3(-x, y, -z),
                 parent_index=parent_index,
                 layer=0,
-                flag=0                
+                flag=0
             ))
         bone_pool[-1].setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
         bone_pool[-1].setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
@@ -179,14 +183,14 @@ def savepmx(model, filename):
     deep_first_search(model['bone_parent'].index(-1), index_pool, -1)
 
     pmx_model.bones = bone_pool
-    
-    
+
+
     for i in range(len(model['position'])):
         x, y, z = model['position'][i]
         nx, ny, nz = model['normal'][i]
         u, v = model['uv'][i]
         vertex_joint_index = list(map(lambda x: old2new[x] if x != 255 else 0,model['vertex_joint'][i]))
-        
+
         vertex = pmx.Vertex(
             common.Vector3(-x, y, -z),
             common.Vector3(-nx, ny, -nz),
@@ -195,12 +199,12 @@ def savepmx(model, filename):
             0.0
         )
         pmx_model.vertices.append(vertex)
-    
+
     for i in range(len(model['face'])):
         pmx_model.indices += list(model['face'][i])
-    
+
     pmx_model.materials[0].vertex_count = len(model['face']) * 3
-    
+
     ###########
     pmx_model.materials = []
     for i in range(len(model['mesh'])):
@@ -232,25 +236,25 @@ def savepmx(model, filename):
     for bone in pmx_model.bones:
         if bone.english_name in paj_middle_bone_name:
             bone.position.x = 0.0
-    
+
     if 'bip001_l_finger13'  in [bone.english_name for bone in pmx_model.bones]:
         paj_bone_name.update(paj_hand1_name)
     else:
         paj_bone_name.update(paj_hand0_name)
 
-    
+
     for bone in pmx_model.bones:
         if bone.english_name in paj_bone_name:
             bone.name = paj_bone_name[bone.english_name][0]
             bone.english_name = paj_bone_name[bone.english_name][1]
-    
+
     def add_bone(pmxm, bone, index):
         assert index <= len(pmxm.bones)
         pmxm.bones.insert(index, bone)
         for bone in pmxm.bones:
             if bone.parent_index >= index:
                 bone.parent_index += 1
-        
+
         for vertex in pmxm.vertices:
             if vertex.deform.index0 >= index:
                 vertex.deform.index0 += 1
@@ -260,9 +264,9 @@ def savepmx(model, filename):
                 vertex.deform.index2 += 1
             if vertex.deform.index3 >= index:
                 vertex.deform.index3 += 1
-        
+
         return index
-    
+
     def find_bone_index_by_name(pmxm, bone_english_name):
         ret = None
         for i in range(len(pmxm.bones)):
@@ -280,23 +284,23 @@ def savepmx(model, filename):
                 position=common.Vector3(0, 8.0, 0),
                 parent_index=parent_node_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
     center_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
     center_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
     center_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-     
+
     waist_index = find_bone_index_by_name(pmx_model, 'Waist')
     center_index = add_bone(pmx_model, center_bone, waist_index)
 
-    
+
     groove_bone = pmx.Bone(
                 name='グルーブ',
                 english_name='Groove',
                 position=common.Vector3(0, 8.2, 0),
                 parent_index=center_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
     groove_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
     groove_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
@@ -327,23 +331,23 @@ def savepmx(model, filename):
                 position=common.Vector3(ankle_x, 0, ankle_z),
                 parent_index=parent_node_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
         leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
         leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
         leg_ik_parent_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
         leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
         leg_ik_parent_index = add_bone(pmx_model, leg_ik_parent_bone, len(pmx_model.bones))
-        
+
         leg_ik_bone = pmx.Bone(
                 name='左足ＩＫ' if LR == 'Left' else '右足ＩＫ',
                 english_name='{}LegIk'.format(LR),
                 position=common.Vector3(ankle_x, ankle_y, ankle_z),
                 parent_index=leg_ik_parent_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
-        
+
         leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
         leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
         leg_ik_bone.setFlag(pmx.BONEFLAG_IS_IK, True)
@@ -365,7 +369,7 @@ def savepmx(model, filename):
                 position=common.Vector3(toe_vec.x, toe_vec.y, toe_vec.z),
                 parent_index=leg_ik_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
         toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
         toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
@@ -409,12 +413,12 @@ def savepmx(model, filename):
                 position=common.Vector3(0, 25, 0),
                 parent_index=head_index,
                 layer=0,
-                flag=0                
+                flag=0
             )
     eyes_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
     eyes_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
     eyes_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-    
+
     pmx_model.bones.append(eyes_bone)
     eyes_index = find_bone_index_by_name(pmx_model, 'Eyes')
     for LR in 'lr':
@@ -433,7 +437,7 @@ def savepmx(model, filename):
             bone_english_name = morph_ref_model.bones[offset.bone_index].english_name
             offset.bone_index = find_bone_index_by_name(pmx_model, bone_english_name)
     '''
-    
+
     pymeshio.pmx.writer.write_to_file(pmx_model, filename + '_modified.pmx')
 
 def parse_nxm(opt):
@@ -452,27 +456,27 @@ def parse_nxm(opt):
                     parent_node = -1
                 parent_nodes.append(parent_node)
             model['bone_parent'] = parent_nodes
-            
+
             bone_names = []
             for _ in range(bone_count):
                 bone_name = f.read(32)
                 bone_name = bone_name.decode().replace('\0', '').replace(' ', '_')
                 bone_names.append(bone_name)
             model['bone_name'] = bone_names
-            
+
             flag = readuint8(f)
             assert flag == 1
 
-            
+
             for _ in range(bone_count):
                 f.read(28)
-            
+
             model['bone_original_matrix'] = []
             for i in range(bone_count):
                 matrix = [readfloat(f) for _ in range(16)]
                 matrix = np.array(matrix).reshape(4, 4)
                 model['bone_original_matrix'].append(matrix)
-            
+
             model['bone_translate'] = []
             model['bone_rotation'] = []
             for i in range(bone_count):
@@ -503,7 +507,7 @@ def parse_nxm(opt):
 
         vertex_count = readuint32(f)
         face_count = readuint32(f)
-        
+
         model['position'] = []
         # vertex position
         for _ in range(vertex_count):
@@ -511,7 +515,7 @@ def parse_nxm(opt):
             y = readfloat(f)
             z = readfloat(f)
             model['position'].append((x, y, z))
-        
+
         model['normal'] = []
         # vertex normal
         for _ in range(vertex_count):
@@ -519,11 +523,11 @@ def parse_nxm(opt):
             y = readfloat(f)
             z = readfloat(f)
             model['normal'].append((x, y, z))
-        
+
         _flag = readuint16(f)
         if _flag:
             f.seek(vertex_count * 12, 1)
-        
+
         model['face'] = []
         # face index table
         for _ in range(face_count):
@@ -531,7 +535,7 @@ def parse_nxm(opt):
             v2 = readuint16(f)
             v3 = readuint16(f)
             model['face'].append((v1, v2, v3))
-        
+
 
         model['uv'] = []
         # vertex uv
@@ -542,25 +546,25 @@ def parse_nxm(opt):
                 model['uv'].append((u, v))
             f.read(mesh_vertex_count * 8 * (_flag - 1))
             f.read(mesh_vertex_count * 4 * _flag2)
-            
+
 
         _flag = readuint32(f)
         f.seek(-4, 1)
         if _flag == -1:
             for _ in range(vertex_count):
                 f.read(4)
-        
+
         if model['bone_exist']:
             model['vertex_joint'] = []
             for _ in range(vertex_count):
                 vertex_joints = [readuint8(f) for _ in range(4)]
                 model['vertex_joint'].append(vertex_joints)
-            
+
             model['vertex_joint_weight'] = []
             for _ in range(vertex_count):
                 vertex_joint_weights = [readfloat(f) for _ in range(4)]
                 model['vertex_joint_weight'].append(vertex_joint_weights)
-        
+
     return model
 
 def main():
@@ -572,8 +576,7 @@ def main():
         saveiqe(model, opt.path)
     elif opt.mode == 'pmx':
         savepmx(model, opt.path)
-    
+
 
 if __name__ == '__main__':
     main()
-    
