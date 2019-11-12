@@ -45,6 +45,10 @@ def get_ext(data):
         return 'rgis'
     elif data[:4] == b'NTRK':
         return 'ntrk'
+    elif data[:4] == b'RIFF':
+        return 'riff'
+    elif data[:4] == b'BKHD':
+        return 'bnk'
     elif len(data) < 1000000:
         if b'void' in data or b'main(' in data or b'include' in data or b'float' in data:
             return 'shader'
@@ -120,7 +124,7 @@ def unpack(opt):
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['nxm', 'ktx']:
+            if ext in ['nxm', 'ktx', 'bnk', 'riff']:
                 with open(folder_path + '/' + file_name , 'wb') as dat:
                     dat.write(data)
 def get_parser():
