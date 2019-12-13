@@ -62,6 +62,12 @@ def get_ext(data):
             return 'txt'
     return 'dat'
 
+def decrypt(data, keys):
+    data = bytearray(data)
+    for i in range(len(data)):
+        data[i] = data[i] ^ keys[i]
+    return data
+
 def unpack(opt):
     keys = []
     folder_path = opt.path.replace('.npk', '')
@@ -119,14 +125,9 @@ def unpack(opt):
             if file_length >= max_length or file_length < 5000:
                 continue
             f.seek(file_offset)
-            with tempfile.TemporaryFile() as tmp:
-                for i in range(file_length):
-                    data = readuint8(f)
-                    if pkg_type:
-                        data = data ^ keys[i]
-                    tmp.write(struct.pack('B', data))
-                tmp.seek(0)
-                data = tmp.read()
+            data = f.read(file_length)
+            if pkg_type:
+                data = decrypt(data, keys)
 
             compact = 'bin'
             if file_flag == 1:
