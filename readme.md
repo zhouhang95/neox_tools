@@ -4,10 +4,10 @@ Step 0
 pip install numpy transformations pymeshio tqdm
 
 Step 1
-python expk_extractor.py expk_file_path
+python extractor.py expk_file_path
 
 example:
-python expk_extractor.py hero1.npk
+python extractor.py hero1.npk
 
 if you'll unpack Onmyoji game.
 you should first rename these files like below:
@@ -22,7 +22,7 @@ res.npk.14 -> res.npk.14
 then:
 
 copy/b res.npk.* res.npk
-python nxpk_extractor.py res.npk
+python extractor.py res.npk
 
 
 Step 2

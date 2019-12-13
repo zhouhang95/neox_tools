@@ -74,7 +74,13 @@ def unpack(opt):
 
     with open(opt.path, 'rb') as f:
         data = f.read(4)
-        assert data == b'EXPK'
+        pkg_type = None
+        if data == b'NXPK':
+            pkg_type = 0
+        elif data == b'EXPK':
+            pkg_type = 1
+        else:
+            raise Exception('NOT NXPK/EXPK FILE')
         files = readuint32(f)
         print(files)
         var1 = readuint32(f)
@@ -87,7 +93,9 @@ def unpack(opt):
         index_table = []
         with tempfile.TemporaryFile() as tmp:
             for i in range(files * 28):
-                data = readuint8(f) ^ keys[i]
+                data = readuint8(f)
+                if pkg_type:
+                    data = data ^ keys[i]
                 tmp.write(struct.pack('B', data))
             tmp.seek(0)
             for _ in range(files):
@@ -113,7 +121,9 @@ def unpack(opt):
             f.seek(file_offset)
             with tempfile.TemporaryFile() as tmp:
                 for i in range(file_length):
-                    data = readuint8(f) ^ keys[i]
+                    data = readuint8(f)
+                    if pkg_type:
+                        data = data ^ keys[i]
                     tmp.write(struct.pack('B', data))
                 tmp.seek(0)
                 data = tmp.read()
