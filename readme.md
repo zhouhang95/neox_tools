@@ -1,42 +1,55 @@
-Neox Model Converter & EXPK/NXPK Extractor
+# Neox Model Converter & EXPK/NXPK Extractor
 
 Step 0
+```
 pip install numpy transformations pymeshio tqdm
-
+```
 Step 1
+```
 python extractor.py expk_file_path
-
+```
 example:
+```
 python extractor.py hero1.npk
-
+```
 if you'll unpack Onmyoji game.
 you should first rename these files like below:
 
 res.npk.0 -> res.npk.00
+
 res.npk.1 -> res.npk.01
+
 ...
+
 res.npk.10 -> res.npk.10
+
 ...
+
 res.npk.14 -> res.npk.14
 
-then:
 
+then:
+```
 copy/b res.npk.* res.npk
 python extractor.py res.npk
-
+```
 
 Step 2
+```
 python neox_model_converter.py nxm_file_path
-
+```
 example:
+```
 python neox_model_converter.py hero1/00390823.nxm
-
+```
 if you want obj format:
+```
 python neox_model_converter.py nxm_file_path --mode obj
-
+```
 if you want iqe format:
+```
 python neox_model_converter.py nxm_file_path --mode iqe
-
+```
 
 You can check this page for update:
 https://github.com/zhouhang95/neox_tools
