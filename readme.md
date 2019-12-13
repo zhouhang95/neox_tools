@@ -1,4 +1,4 @@
-Neox Model Converter & EXPK Extractor
+Neox Model Converter & EXPK/NXPK Extractor
 
 Step 0
 pip install numpy transformations pymeshio tqdm
