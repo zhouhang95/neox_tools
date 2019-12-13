@@ -124,7 +124,7 @@ def unpack(opt):
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['nxm', 'ktx', 'bnk', 'riff']:
+            if ext in ['nxm', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds', 'ktx']:
                 with open(folder_path + '/' + file_name , 'wb') as dat:
                     dat.write(data)
 def get_parser():
