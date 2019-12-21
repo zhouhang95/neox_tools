@@ -1,5 +1,7 @@
 # Neox Model Converter & EXPK/NXPK Extractor
 
+python version is 3!
+
 Step 0
 ```
 pip install numpy transformations pymeshio tqdm
