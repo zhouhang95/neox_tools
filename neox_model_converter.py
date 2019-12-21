@@ -31,27 +31,18 @@ def saveobj(model, filename):
     with open(filename + '.obj', 'w') as f:
         f.write('o {}\n'.format(filename))
 
-        mesh_vertex_counter = 0
-        mesh_face_counter = 0
-
-        for mesh_i in range(len(model['mesh'])):
-            mesh_vertex_counter_end = mesh_vertex_counter + model['mesh'][mesh_i][0]
-            mesh_face_counter_end = mesh_face_counter + model['mesh'][mesh_i][1]
-            if len(model['mesh']) > 1:
-                f.write('g mesh{}\n'.format(mesh_i))
-
-            for x, y, z in model['position']:
-                f.write('v {} {} {}\n'.format(-x, y, z))
-            for x, y, z in model['normal']:
-                f.write('vn {} {} {}\n'.format(-x, y, z))
-            for u, v in model['uv']:
-                f.write('vt {} {}\n'.format(u, 1-v))
-            for v1, v2, v3 in model['face']:
-                f.write('f {}/{}/{} {}/{}/{} {}/{}/{}\n'.format(
-                    v2+1,v2+1,v2+1,
-                    v1+1,v1+1,v1+1,
-                    v3+1,v3+1,v3+1
-                ))
+        for x, y, z in model['position']:
+            f.write('v {} {} {}\n'.format(-x, y, z))
+        for x, y, z in model['normal']:
+            f.write('vn {} {} {}\n'.format(-x, y, z))
+        for u, v in model['uv']:
+            f.write('vt {} {}\n'.format(u, 1-v))
+        for v1, v2, v3 in model['face']:
+            f.write('f {}/{}/{} {}/{}/{} {}/{}/{}\n'.format(
+                v2+1,v2+1,v2+1,
+                v1+1,v1+1,v1+1,
+                v3+1,v3+1,v3+1
+            ))
 
 def saveiqe(model, filename):
     with open(filename + '.iqe ', 'w') as f:
