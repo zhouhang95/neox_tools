@@ -38,19 +38,19 @@ python extractor.py res.npk
 
 Step 2
 ```
-python neox_model_converter.py nxm_file_path
+python converter.py nxm_file_path
 ```
 example:
 ```
-python neox_model_converter.py hero1/00390823.nxm
+python converter.py hero1/00390823.nxm
 ```
 if you want obj format:
 ```
-python neox_model_converter.py nxm_file_path --mode obj
+python converter.py nxm_file_path --mode obj
 ```
 if you want iqe format:
 ```
-python neox_model_converter.py nxm_file_path --mode iqe
+python converter.py nxm_file_path --mode iqe
 ```
 
 You can check this page for update:
