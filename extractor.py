@@ -88,7 +88,7 @@ def unpack(opt):
         else:
             raise Exception('NOT NXPK/EXPK FILE')
         files = readuint32(f)
-        print(files)
+        # print(files)
         var1 = readuint32(f)
         var2 = readuint32(f)
         var3 = readuint32(f)
@@ -119,7 +119,7 @@ def unpack(opt):
                     file_flag,
                     ))
 
-        for i, item in tqdm(enumerate(index_table)):
+        for i, item in enumerate(index_table):
             file_name = '{:8}.dat'.format(i)
             file_offset, file_length, file_original_length, file_flag = item
             if file_length >= max_length or file_length < 5000:
@@ -129,15 +129,20 @@ def unpack(opt):
             if pkg_type:
                 data = decrypt(data, keys)
 
-            compact = 'bin'
             if file_flag == 1:
-                compact = 'zlib'
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['nxm', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds', 'ktx']:
-                with open(folder_path + '/' + file_name , 'wb') as dat:
+            print('{}/{}'.format(i + 1, files))
+            if ext in ['nxm', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
+                file_path = folder_path + '/' + file_name
+                with open(file_path, 'wb') as dat:
                     dat.write(data)
+                if ext in ['ktx', 'pvr']:
+                    os.system('bin\\PVRTexToolCLI.exe -i {} -d -f r8g8b8a8'.format(file_path))
+        os.system('del {}\\*.ktx'.format(folder_path))
+        os.system('del {}\\*.pvr'.format(folder_path))
+
 def get_parser():
     parser = argparse.ArgumentParser(description='EXPK Extractor')
     parser.add_argument('path', type=str)
