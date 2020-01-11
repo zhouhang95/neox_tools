@@ -133,8 +133,8 @@ def unpack(opt):
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            print('{}/{}'.format(i + 1, files))
             if ext in ['nxm', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
+                print('{}/{}'.format(i + 1, files))
                 file_path = folder_path + '/' + file_name
                 with open(file_path, 'wb') as dat:
                     dat.write(data)
