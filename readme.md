@@ -6,7 +6,7 @@ Step 0
 ```
 pip install numpy transformations pymeshio tqdm
 ```
-If you are in Chine, please use ...
+If you are in China, please use ...
 ```
 pip install numpy transformations pymeshio tqdm -i https://pypi.douban.com/simple
 ```
