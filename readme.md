@@ -6,6 +6,10 @@ Step 0
 ```
 pip install numpy transformations pymeshio tqdm
 ```
+If you are in Chine, please use ...
+```
+pip install numpy transformations pymeshio tqdm -i https://pypi.douban.com/simple
+```
 Step 1
 ```
 python extractor.py expk_file_path
