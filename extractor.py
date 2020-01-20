@@ -68,7 +68,7 @@ def decrypt(data, keys):
         data[i] = data[i] ^ keys[i]
     return data
 
-def unpack(path):
+def unpack(path, statusBar=None):
     keys = []
     folder_path = path.replace('.npk', '')
     os.mkdir(folder_path)
@@ -120,6 +120,8 @@ def unpack(path):
                     ))
 
         for i, item in enumerate(index_table):
+            if i % 20 == 0 and statusBar != None:
+                statusBar.showMessage('{} / {}'.format(i, files))
             file_name = '{:8}.dat'.format(i)
             file_offset, file_length, file_original_length, file_flag = item
             if file_length >= max_length or file_length < 5000:
@@ -142,6 +144,8 @@ def unpack(path):
                     os.system('bin\\PVRTexToolCLI.exe -i {} -d -f r8g8b8a8'.format(file_path))
         os.system('del {}\\*.ktx'.format(folder_path))
         os.system('del {}\\*.pvr'.format(folder_path))
+        if statusBar != None:
+                statusBar.showMessage('Unpack completed!')
 
 def get_parser():
     parser = argparse.ArgumentParser(description='EXPK Extractor')

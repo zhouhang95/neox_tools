@@ -1,5 +1,6 @@
 import sys
 import os
+from threading import Thread
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -100,7 +101,8 @@ class MyApp(QMainWindow):
         path = path[0]
         if path == '':
             return
-        unpack(path)
+        self.thread = Thread(target=unpack, args=(path, self.statusBar))
+        self.thread.start()
     
     def cb_openHomePage(self):
         QDesktopServices.openUrl(QUrl('https://github.com/zhouhang95/neox_tools'))
