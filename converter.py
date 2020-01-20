@@ -45,6 +45,16 @@ def saveobj(model, filename):
             ))
 
 def saveiqe(model, filename):
+    model['bone_translate'] = []
+    model['bone_rotation'] = []
+    for i in range(bone_count):
+        matrix = tf.identity_matrix()
+        parent_node = model['bone_parent'][i]
+        if parent_node >= 0:
+            matrix = model['bone_original_matrix'][parent_node]
+        matrix = np.dot(model['bone_original_matrix'][i], np.linalg.inv(matrix))
+        model['bone_translate'].append(tf.translation_from_matrix(matrix.T))
+        model['bone_rotation'].append(tf.quaternion_from_matrix(matrix.T))
     with open(filename + '.iqe ', 'w') as f:
         f.write('# Inter-Quake Export\n')
         f.write('\n')
@@ -467,17 +477,6 @@ def parse_nxm(path):
                 matrix = [readfloat(f) for _ in range(16)]
                 matrix = np.array(matrix).reshape(4, 4)
                 model['bone_original_matrix'].append(matrix)
-
-            model['bone_translate'] = []
-            model['bone_rotation'] = []
-            for i in range(bone_count):
-                matrix = tf.identity_matrix()
-                parent_node = model['bone_parent'][i]
-                if parent_node >= 0:
-                    matrix = model['bone_original_matrix'][parent_node]
-                matrix = np.dot(model['bone_original_matrix'][i], np.linalg.inv(matrix))
-                model['bone_translate'].append(tf.translation_from_matrix(matrix.T))
-                model['bone_rotation'].append(tf.quaternion_from_matrix(matrix.T))
 
             _flag = readuint8(f) # 00
             assert _flag == 0
