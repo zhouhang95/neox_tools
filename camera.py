@@ -50,3 +50,6 @@ class Camera:
         dv = Vector4([dx, dy, 0.0, 0.0])
         dv = ~self.rot() * dv
         self._pos += dv
+
+    def orthogonal(self, direct, ctrl):
+        log('direct: {}, ctrl: {}'.format(direct, ctrl))

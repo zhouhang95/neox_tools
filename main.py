@@ -48,9 +48,8 @@ class CentralWidget(QSplitter):
         else:
             self.viewer.keyPressEvent(event)
 
-    
     def keyReleaseEvent(self, event):
-        self.viewer.keyPressEvent(event)
+        self.viewer.keyReleaseEvent(event)
     
     def load_folder(self, folder_path):
         self.viewer.release_mesh()

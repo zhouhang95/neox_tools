@@ -1,6 +1,7 @@
 import sys
 import moderngl as mgl
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
 
 from util import *
 from camera import Camera
@@ -16,6 +17,7 @@ class ViewerWidget(QModernGLWidget):
 
         self.mouse_middle_pressed = False
         self.shift_pressed = False
+        self.ctrl_pressed = False
 
     def init(self):
         self.ctx.viewport = self.viewport
@@ -76,10 +78,20 @@ class ViewerWidget(QModernGLWidget):
     def keyPressEvent(self, event):
         if event.key() == 16777248:
             self.shift_pressed = True
+        elif event.key() == 16777249:
+            self.ctrl_pressed = True
+        elif event.key() == ord('1'):
+            self.scene.camera.orthogonal(1, self.ctrl_pressed)
+        elif event.key() == ord('3'):
+            self.scene.camera.orthogonal(3, self.ctrl_pressed)
+        elif event.key() == ord('7'):
+            self.scene.camera.orthogonal(7, self.ctrl_pressed)
 
     def keyReleaseEvent(self, event):
         if event.key() == 16777248:
             self.shift_pressed = False
+        elif event.key() == 16777249:
+            self.ctrl_pressed = False
     
     def load_mesh(self, mesh):
         self.scene.load_mesh(mesh)
