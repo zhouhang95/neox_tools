@@ -91,7 +91,7 @@ class MyApp(QMainWindow):
             return
     
     def cb_openHomePage(self):
-        QDesktopServices.openUrl(QUrl('https://github.com/zhouhang95/neox_viewer'))
+        QDesktopServices.openUrl(QUrl('https://github.com/zhouhang95/neox_tools'))
 
     def cb_load_folder(self):
         path = QFileDialog.getExistingDirectory()
