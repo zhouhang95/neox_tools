@@ -68,9 +68,9 @@ def decrypt(data, keys):
         data[i] = data[i] ^ keys[i]
     return data
 
-def unpack(opt):
+def unpack(path):
     keys = []
-    folder_path = opt.path.replace('.npk', '')
+    folder_path = path.replace('.npk', '')
     os.mkdir(folder_path)
     with open('key.txt') as f:
         for value in f:
@@ -78,7 +78,7 @@ def unpack(opt):
     max_length = len(keys)
 
 
-    with open(opt.path, 'rb') as f:
+    with open(path, 'rb') as f:
         data = f.read(4)
         pkg_type = None
         if data == b'NXPK':
@@ -151,7 +151,7 @@ def get_parser():
 
 def main():
     opt = get_parser()
-    unpack(opt)
+    unpack(opt.path)
 
 
 if __name__ == '__main__':

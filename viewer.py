@@ -79,8 +79,8 @@ class ViewerWidget(QModernGLWidget):
     def release_shift(self):
         self.shift_pressed = False
     
-    def load_mesh(self, path):
-        self.scene.load_mesh(path)
+    def load_mesh(self, mesh):
+        self.scene.load_mesh(mesh)
         self.update()
 
     def release_mesh(self):

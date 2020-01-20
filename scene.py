@@ -33,10 +33,9 @@ class Scene:
 
         self.load_grid()
 
-    def load_mesh(self, path):
+    def load_mesh(self, mesh):
         self.release_mesh()
-        
-        mesh = nxm_from_path(path)
+
         self.vbo = self.ctx.buffer(mesh['gldat'].astype('f4').tobytes())
         self.ibo = self.ctx.buffer(mesh['glindex'].astype('i4').tobytes())
         vao_content = [
