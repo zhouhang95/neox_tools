@@ -21,6 +21,7 @@ class CentralWidget(QSplitter):
         self.names = []
         self.name = ''
         self.mesh = None
+        self.grabKeyboard()
 
         self.listWidget.itemSelectionChanged.connect(self.cb_itemSelectionChanged)
 
@@ -42,12 +43,14 @@ class CentralWidget(QSplitter):
             self.viewer.load_mesh(self.mesh)
 
     def keyPressEvent(self, event):
-        if event.key() == 16777248:
-            self.viewer.press_shift()
+        if event.key() in [16777235, 16777237]:
+            self.listWidget.keyPressEvent(event)
+        else:
+            self.viewer.keyPressEvent(event)
+
     
     def keyReleaseEvent(self, event):
-        if event.key() == 16777248:
-            self.viewer.release_shift()
+        self.viewer.keyPressEvent(event)
     
     def load_folder(self, folder_path):
         self.viewer.release_mesh()
@@ -132,9 +135,9 @@ class MyApp(QMainWindow):
         savepmx(self.centralWidget.mesh, self.centralWidget.name)
         self.statusBar.showMessage('PMX saved!')
 
-
     def cb_help(self):
         QMessageBox.about(self, 'Help', help_text)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

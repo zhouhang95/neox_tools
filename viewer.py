@@ -73,11 +73,13 @@ class ViewerWidget(QModernGLWidget):
         if hasattr(self, 'ctx') and hasattr(self.ctx, 'viewport'):
             self.ctx.viewport = self.viewport
 
-    def press_shift(self):
-        self.shift_pressed = True
+    def keyPressEvent(self, event):
+        if event.key() == 16777248:
+            self.shift_pressed = True
 
-    def release_shift(self):
-        self.shift_pressed = False
+    def keyReleaseEvent(self, event):
+        if event.key() == 16777248:
+            self.shift_pressed = False
     
     def load_mesh(self, mesh):
         self.scene.load_mesh(mesh)
