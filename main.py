@@ -74,6 +74,7 @@ class MyApp(QMainWindow):
 
         self.about = self.menubar.addMenu('About')
         self.about.addAction('Home Page', self.cb_openHomePage)
+        self.about.addAction('Help', self.cb_help)
 
         self.centralWidget = CentralWidget(self)
         self.setCentralWidget(self.centralWidget)
@@ -101,6 +102,9 @@ class MyApp(QMainWindow):
     
     def cb_save(self):
         pass
+
+    def cb_help(self):
+        QMessageBox.about(self, 'Help', help_text)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

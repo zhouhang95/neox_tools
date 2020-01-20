@@ -100,3 +100,12 @@ def file_paths_from_dir(path):
     file_names = file_names_from_dir(path)
     file_paths = list(map(lambda s: path + '/' + s, file_names))
     return file_paths
+
+help_text = '''
+Key Up: change to prev mesh
+Key Down: change to next mesh
+
+Mouse Middle: Orbit
+Mouse Middle Scroll: Dolly
+Dhift + Mouse Middle: Pan
+'''
