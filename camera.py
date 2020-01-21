@@ -12,6 +12,7 @@ class Camera:
         self.dist = 4.0
         self.fovY = 45
         self.aspect_ratio = 1
+        self.perspective = True
 
     def pos(self):
         return self._pos
@@ -52,4 +53,11 @@ class Camera:
         self._pos += dv
 
     def orthogonal(self, direct, ctrl):
-        log('direct: {}, ctrl: {}'.format(direct, ctrl))
+        self.yaw, self.pitch, self.roll = 0.0, 0.0, 0.0
+        if direct == 1:
+            self.yaw = 0.0 if ctrl == False else 180.0
+        elif direct == 3:
+            self.yaw = 90.0 if ctrl == False else -90.0
+        elif direct == 7:
+            self.pitch = -90.0 if ctrl == False else 90.0
+

@@ -86,6 +86,7 @@ class ViewerWidget(QModernGLWidget):
             self.scene.camera.orthogonal(3, self.ctrl_pressed)
         elif event.key() == ord('7'):
             self.scene.camera.orthogonal(7, self.ctrl_pressed)
+        self.update()
 
     def keyReleaseEvent(self, event):
         if event.key() == 16777248:
