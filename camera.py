@@ -33,7 +33,10 @@ class Camera:
         return view
 
     def proj(self):
-        return Matrix44.perspective_projection(self.fovY, self.aspect_ratio, 0.1, 1000.0)
+        if self.perspective == True:
+            return Matrix44.perspective_projection(self.fovY, self.aspect_ratio, 0.1, 1000.0)
+        else:
+            return Matrix44.orthogonal_projection(-1, 1, -1, 1, 0.1, 1000.0)
 
     def view_proj(self):
         return self.proj() * self.view()
@@ -42,6 +45,7 @@ class Camera:
         self.dist -= d * 0.2
 
     def orbit(self, dx, dy):
+        self.perspective = True
         self.yaw -= dx * 0.5
         self.pitch -= dy * 0.5
 
@@ -53,6 +57,7 @@ class Camera:
         self._pos += dv
 
     def orthogonal(self, direct, ctrl):
+        self.perspective = False
         self.yaw, self.pitch, self.roll = 0.0, 0.0, 0.0
         if direct == 1:
             self.yaw = 0.0 if ctrl == False else 180.0
