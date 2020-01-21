@@ -42,19 +42,19 @@ python extractor.py res.npk
 
 Step 2
 ```
-python converter.py nxm_file_path
+python converter.py mesh_file_path
 ```
 example:
 ```
-python converter.py hero1/00390823.nxm
+python converter.py hero1/00390823.mesh
 ```
 if you want obj format:
 ```
-python converter.py nxm_file_path --mode obj
+python converter.py mesh_file_path --mode obj
 ```
 if you want iqe format:
 ```
-python converter.py nxm_file_path --mode iqe
+python converter.py mesh_file_path --mode iqe
 ```
 
 You can check this page for update:

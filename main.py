@@ -32,14 +32,14 @@ class CentralWidget(QSplitter):
         if len(self.paths) > current_row:
             path = self.paths[current_row]
             self.name = self.names[current_row]
-            self.mesh = nxm_from_path(path)
+            self.mesh = mesh_from_path(path)
             self.viewer.load_mesh(self.mesh)
 
     def init_load_mesh(self):
         if (len(self.paths) > 0):
             path = self.paths[0]
             self.name = self.names[0]
-            self.mesh = nxm_from_path(path)
+            self.mesh = mesh_from_path(path)
             self.viewer.load_mesh(self.mesh)
 
     def keyPressEvent(self, event):

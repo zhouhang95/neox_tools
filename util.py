@@ -4,7 +4,7 @@ import moderngl_window as mglw
 from PyQt5 import QtCore, QtOpenGL
 import moderngl
 
-from converter import parse_nxm
+from converter import parse_mesh
 
 
 class Example(mglw.WindowConfig):
@@ -69,8 +69,8 @@ def shader_from_path(path):
 def res_from_path(path):
     return data_from_path('res/' + path)
 
-def nxm_from_path(path):
-    mesh = parse_nxm(path)
+def mesh_from_path(path):
+    mesh = parse_mesh(path)
     pos = np.array(mesh['position'])
     pos[:,0] = -pos[:,0]
     norm = np.array(mesh['normal'])
@@ -93,7 +93,7 @@ def grid(size, steps):
 
 def file_names_from_dir(path):
     file_names = os.listdir(path)
-    file_names = list(filter(lambda s: s.endswith('.nxm'), file_names))
+    file_names = list(filter(lambda s: s.endswith('.mesh'), file_names))
     return file_names
 
 def file_paths_from_dir(path):

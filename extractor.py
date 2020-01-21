@@ -30,7 +30,7 @@ def get_ext(data):
     elif data[1:4] == b'PNG':
         return 'png'
     elif data[:4] == bytes([0x34, 0x80, 0xC8, 0xBB]):
-        return 'nxm'
+        return 'mesh'
     elif data[:4] == bytes([0x14, 0x00, 0x00, 0x00]):
         return 'type1'
     elif data[:4] == bytes([0x04, 0x00, 0x00, 0x00]):
@@ -135,7 +135,7 @@ def unpack(path, statusBar=None):
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['nxm', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
+            if ext in ['mesh', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
                 print('{}/{}'.format(i + 1, files))
                 file_path = folder_path + '/' + file_name
                 with open(file_path, 'wb') as dat:

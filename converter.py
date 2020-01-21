@@ -232,7 +232,7 @@ def savepmx(model, filename):
         )
 
 
-    filename = filename.replace('.nxm', '')
+    filename = filename.replace('.mesh', '')
     pymeshio.pmx.writer.write_to_file(pmx_model, filename + '.pmx')
     for bone in pmx_model.bones:
         if bone.english_name in paj_middle_bone_name:
@@ -441,7 +441,7 @@ def savepmx(model, filename):
 
     pymeshio.pmx.writer.write_to_file(pmx_model, filename + '_modified.pmx')
 
-def parse_nxm(path):
+def parse_mesh(path):
     model = {}
     with open(path, 'rb') as f:
         _magic_number = f.read(8)
@@ -559,7 +559,7 @@ def parse_nxm(path):
 
 def main():
     opt = get_parser()
-    model = parse_nxm(opt.path)
+    model = parse_mesh(opt.path)
     if opt.mode == 'obj':
         saveobj(model, opt.path)
     elif opt.mode == 'iqe':
