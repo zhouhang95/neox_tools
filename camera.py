@@ -36,7 +36,8 @@ class Camera:
         if self.perspective == True:
             return Matrix44.perspective_projection(self.fovY, self.aspect_ratio, 0.1, 1000.0)
         else:
-            return Matrix44.orthogonal_projection(-1, 1, -1, 1, 0.1, 1000.0)
+            length = math.tan(math.radians(self.fovY / 2)) * math.fabs(self.dist)
+            return Matrix44.orthogonal_projection(-length, length, -length, length, 0.1, 1000.0)
 
     def view_proj(self):
         return self.proj() * self.view()
