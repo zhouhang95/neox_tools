@@ -21,6 +21,7 @@ class Scene:
             vertex_shader=vertex_shader,
             fragment_shader=fragment_shader,
         )
+        self.mv = self.prog['mv']
         self.mvp = self.prog['mvp']
         self.const_color = self.prog['const_color']
 
@@ -59,20 +60,21 @@ class Scene:
     def clear(self, color=(0.23, 0.23, 0.23)):
         self.ctx.clear(*color)
     
-    def draw_grid(self, vp):
-        mvp = vp * self.grid_model
+    def draw_grid(self):
+        mvp = self.camera.view_proj() * self.grid_model
         self.grid_mvp.write(mvp.astype('f4').tobytes())
         self.grid_const_color.value = (0.3, 0.3, 0.3)
         self.grid_vao.render(mgl.LINES)
 
-    def draw_mesh(self, vp):
+    def draw_mesh(self):
         if hasattr(self, 'model'):
-            mvp = vp * self.model
+            mv = self.camera.view() * self.model
+            mvp = self.camera.proj() * mv
+            self.mv.write(mv.astype('f4').tobytes())
             self.mvp.write(mvp.astype('f4').tobytes())
             self.const_color.value = (0.8, 0.8, 0.8)
             self.vao.render()
     
     def draw(self):
-        vp = self.camera.view_proj()
-        self.draw_grid(vp)
-        self.draw_mesh(vp)
+        self.draw_grid()
+        self.draw_mesh()
