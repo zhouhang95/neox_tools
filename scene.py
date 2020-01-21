@@ -5,17 +5,18 @@ from util import *
 from camera import Camera
 
 
-vertex_shader = shader_from_path('basic_w_norm.vert')
-fragment_shader = shader_from_path('basic_w_norm.frag')
-grid_vertex_shader = shader_from_path('basic.vert')
-grid_fragment_shader = shader_from_path('basic.frag')
-
-
 class Scene:
     def __init__(self, ctx):
         self.ctx = ctx
-        self.counter = 0
         self.camera = Camera()
+        self._init_shader()
+        self.load_grid()
+
+    def _init_shader(self):
+        vertex_shader = shader_from_path('basic_w_norm.vert')
+        fragment_shader = shader_from_path('basic_w_norm.frag')
+        grid_vertex_shader = shader_from_path('basic.vert')
+        grid_fragment_shader = shader_from_path('basic.frag')
 
         self.prog = self.ctx.program(
             vertex_shader=vertex_shader,
@@ -31,8 +32,6 @@ class Scene:
         )
         self.grid_mvp = self.grid_prog['mvp']
         self.grid_const_color = self.grid_prog['const_color']
-
-        self.load_grid()
 
     def load_mesh(self, mesh):
         self.release_mesh()
