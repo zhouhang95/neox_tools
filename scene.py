@@ -72,6 +72,7 @@ class Scene:
             self.const_color.value = (0.8, 0.8, 0.8)
             self.vao.render()
     
-    def draw(self, vp):
+    def draw(self):
+        vp = self.camera.view_proj()
         self.draw_grid(vp)
         self.draw_mesh(vp)

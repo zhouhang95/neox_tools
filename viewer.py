@@ -27,8 +27,7 @@ class ViewerWidget(QModernGLWidget):
     def render(self):
         self.screen.use()
         self.scene.clear()
-        vp = self.scene.camera.view_proj()
-        self.scene.draw(vp)
+        self.scene.draw()
     
     def ctx_init(self):
         self.ctx.enable(mgl.DEPTH_TEST)
