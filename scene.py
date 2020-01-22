@@ -11,6 +11,7 @@ class Scene:
         self.camera = Camera()
         self._init_shader()
         self.load_grid()
+        self.load_point()
 
     def _init_shader(self):
         vertex_shader = shader_from_path('basic_w_norm.vert')
@@ -55,15 +56,26 @@ class Scene:
         self.grid_vbo = self.ctx.buffer(grid(5, 10).astype('f4').tobytes())
         self.grid_vao = self.ctx.simple_vertex_array(self.grid_prog, self.grid_vbo, 'in_vert')
         self.grid_model = Matrix44.from_translation((0, -1, 0))
-    
+
+    def load_point(self):
+        self.point_vbo = self.ctx.buffer(np.array([0.0, 0.0, 0.0]).astype('f4').tobytes())
+        self.point_vao = self.ctx.simple_vertex_array(self.grid_prog, self.point_vbo, 'in_vert')
+        self.point_model = Matrix44.from_translation((0, -0.9, 0))
+
     def clear(self, color=(0.23, 0.23, 0.23)):
         self.ctx.clear(*color)
-    
+
     def draw_grid(self):
         mvp = self.camera.view_proj() * self.grid_model
         self.grid_mvp.write(mvp.astype('f4').tobytes())
         self.grid_const_color.value = (0.3, 0.3, 0.3)
         self.grid_vao.render(mgl.LINES)
+
+    def draw_point(self):
+        mvp = self.camera.view_proj() * self.point_model
+        self.grid_mvp.write(mvp.astype('f4').tobytes())
+        self.grid_const_color.value = (1.0, 0.0, 0.0)
+        self.point_vao.render(mgl.POINTS)
 
     def draw_mesh(self):
         if hasattr(self, 'model'):
@@ -76,4 +88,5 @@ class Scene:
     
     def draw(self):
         self.draw_grid()
+        self.draw_point()
         self.draw_mesh()
