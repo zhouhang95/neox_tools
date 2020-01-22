@@ -26,7 +26,6 @@ class ViewerWidget(QModernGLWidget):
 
     def render(self):
         self.screen.use()
-        self.scene.clear()
         self.scene.draw()
     
     def ctx_init(self):

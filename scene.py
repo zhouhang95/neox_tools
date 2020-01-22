@@ -43,7 +43,7 @@ class Scene:
             (self.vbo, '3f 3f', 'in_vert', 'in_norm')
         ]
         self.vao = self.ctx.vertex_array(self.prog, vao_content, self.ibo)
-        self.model = Matrix44.from_translation((0, -1, 0)) * Matrix44.from_scale((0.1, 0.1, 0.1))
+        self.model = Matrix44.from_scale((0.1, 0.1, 0.1))
     
     def release_mesh(self):
         if hasattr(self, 'model'):
@@ -55,12 +55,12 @@ class Scene:
     def load_grid(self):
         self.grid_vbo = self.ctx.buffer(grid(5, 10).astype('f4').tobytes())
         self.grid_vao = self.ctx.simple_vertex_array(self.grid_prog, self.grid_vbo, 'in_vert')
-        self.grid_model = Matrix44.from_translation((0, -1, 0))
+        self.grid_model = Matrix44.from_translation((0, 0, 0))
 
     def load_point(self):
         self.point_vbo = self.ctx.buffer(np.array([0.0, 0.0, 0.0]).astype('f4').tobytes())
         self.point_vao = self.ctx.simple_vertex_array(self.grid_prog, self.point_vbo, 'in_vert')
-        self.point_model = Matrix44.from_translation((0, -0.9, 0))
+        self.point_model = Matrix44.from_translation((0, 0, 0))
 
     def clear(self, color=(0.23, 0.23, 0.23)):
         self.ctx.clear(*color)
@@ -87,6 +87,7 @@ class Scene:
             self.vao.render()
     
     def draw(self):
+        self.clear()
         self.draw_grid()
         self.draw_point()
         self.draw_mesh()

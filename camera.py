@@ -5,7 +5,7 @@ from util import log
 
 class Camera:
     def __init__(self):
-        self._pos = Vector4()
+        self._pos = Vector4([0, 1, 0, 0])
         self.pitch = 0.0
         self.yaw = 10.0
         self.roll = 0.0
