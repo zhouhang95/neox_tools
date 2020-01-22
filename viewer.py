@@ -2,6 +2,7 @@ import sys
 import moderngl as mgl
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
+from OpenGL.GL import glEnable, GL_PROGRAM_POINT_SIZE
 
 from util import *
 from camera import Camera
@@ -29,6 +30,7 @@ class ViewerWidget(QModernGLWidget):
         self.scene.draw()
     
     def ctx_init(self):
+        glEnable(GL_PROGRAM_POINT_SIZE)
         self.ctx.enable(mgl.DEPTH_TEST)
         self.ctx.enable(mgl.CULL_FACE)
 
