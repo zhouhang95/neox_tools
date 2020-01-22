@@ -14,10 +14,13 @@ class Scene:
         self.load_point()
 
     def _init_shader(self):
+        self._init_mesh_shader()
+        self._init_grid_shader()
+        self._init_point_shader()
+
+    def _init_mesh_shader(self):
         vertex_shader = shader_from_path('basic_w_norm.vert')
         fragment_shader = shader_from_path('basic_w_norm.frag')
-        grid_vertex_shader = shader_from_path('basic.vert')
-        grid_fragment_shader = shader_from_path('basic.frag')
 
         self.prog = self.ctx.program(
             vertex_shader=vertex_shader,
@@ -27,12 +30,27 @@ class Scene:
         self.mvp = self.prog['mvp']
         self.const_color = self.prog['const_color']
 
+    def _init_grid_shader(self):
+        grid_vertex_shader = shader_from_path('basic.vert')
+        grid_fragment_shader = shader_from_path('basic.frag')
+
         self.grid_prog = self.ctx.program(
             vertex_shader=grid_vertex_shader,
             fragment_shader=grid_fragment_shader,
         )
         self.grid_mvp = self.grid_prog['mvp']
         self.grid_const_color = self.grid_prog['const_color']
+
+    def _init_point_shader(self):
+        point_vertex_shader = shader_from_path('point.vert')
+        point_fragment_shader = shader_from_path('point.frag')
+
+        self.point_prog = self.ctx.program(
+            vertex_shader=point_vertex_shader,
+            fragment_shader=point_fragment_shader,
+        )
+        self.point_mvp = self.point_prog['mvp']
+        self.point_const_color = self.point_prog['const_color']
 
     def load_mesh(self, mesh):
         self.release_mesh()
@@ -59,7 +77,7 @@ class Scene:
 
     def load_point(self):
         self.point_vbo = self.ctx.buffer(np.array([0.0, 0.0, 0.0]).astype('f4').tobytes())
-        self.point_vao = self.ctx.simple_vertex_array(self.grid_prog, self.point_vbo, 'in_vert')
+        self.point_vao = self.ctx.simple_vertex_array(self.point_prog, self.point_vbo, 'in_vert')
         self.point_model = Matrix44.from_translation((0, 0, 0))
 
     def clear(self, color=(0.23, 0.23, 0.23)):
@@ -73,8 +91,8 @@ class Scene:
 
     def draw_point(self):
         mvp = self.camera.view_proj() * self.point_model
-        self.grid_mvp.write(mvp.astype('f4').tobytes())
-        self.grid_const_color.value = (1.0, 0.0, 0.0)
+        self.point_mvp.write(mvp.astype('f4').tobytes())
+        self.point_const_color.value = (1.0, 0.0, 0.0)
         self.point_vao.render(mgl.POINTS)
 
     def draw_mesh(self):
