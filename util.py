@@ -1,28 +1,9 @@
 import os
 import numpy as np
-import moderngl_window as mglw
 from PyQt5 import QtCore, QtOpenGL
 import moderngl
 
 from converter import parse_mesh
-
-
-class Example(mglw.WindowConfig):
-    gl_version = (3, 3)
-    title = "ModernGL Example"
-    window_size = (512, 512)
-    aspect_ratio = 1
-    resizable = False
-    samples = 4
-
-    resource_dir = os.path.normpath('res')
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    @classmethod
-    def run(cls):
-        mglw.run_window_config(cls)
 
 
 class QModernGLWidget(QtOpenGL.QGLWidget):
