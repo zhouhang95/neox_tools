@@ -65,13 +65,8 @@ def get_ext(data):
 
 
 def unpack(path, statusBar=None):
-    keys = []
     folder_path = path.replace('.npk', '')
     os.mkdir(folder_path)
-    with open('key.txt') as f:
-        for value in f:
-            keys.append(int(value))
-    max_length = len(keys)
 
     with open(path, 'rb') as f:
         data = f.read(4)
@@ -93,11 +88,9 @@ def unpack(path, statusBar=None):
         f.seek(index_offset)
         index_table = []
         with tempfile.TemporaryFile() as tmp:
-            for i in range(files * 28):
-                data = readuint8(f)
-                if pkg_type:
-                    data = data ^ keys[i]
-                tmp.write(struct.pack('B', data))
+            data = f.read(files * 28)
+            data = decrypt(data)
+            tmp.write(data)
             tmp.seek(0)
             for _ in range(files):
                 file_sign = readuint32(tmp)
