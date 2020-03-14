@@ -19,19 +19,35 @@ moba_xor_key = [
     0xAE, 0x4E, 0x0E, 0x81, 0x45, 0x2A, 0x91, 0x90, 0xFE, 0xA3, 0x09, 0x2C, 0x85, 0x4D, 0xB9, 0x7E,
 ]
 
-def decrypt(data):
-    data = bytearray(data)
-    key_data = copy(moba_xor_key)
-    key_index = 0
-    key_tmp_index = 0
-    for i in range(len(data)):
-        key_index += 1
-        tmp_data = key_data[key_index % 256]
-        key_tmp_index += tmp_data
-        key_tmp_index %= 256
-        key_data[key_index % 256] = key_data[key_tmp_index]
-        key_data[key_tmp_index] = tmp_data
-        key_i = key_data[(key_data[key_index % 256] + tmp_data) % 256 & 0xFF]
 
-        data[i] = data[i] ^ key_i
-    return data
+class Keys:
+    def __init__(self):
+        self.keys = []
+
+    def gen_keys(self, lenght):
+        key_ = []
+        key_data = copy(moba_xor_key)
+        key_index = 0
+        key_tmp_index = 0
+        for i in range(lenght):
+            key_index += 1
+            tmp_data = key_data[key_index % 256]
+            key_tmp_index += tmp_data
+            key_tmp_index %= 256
+            key_data[key_index % 256] = key_data[key_tmp_index]
+            key_data[key_tmp_index] = tmp_data
+            key_i = key_data[(key_data[key_index % 256] + tmp_data) % 256 & 0xFF]
+            key_.append(key_i)
+        self.keys = key_
+
+    def ensure_keys(self, lenght):
+        if lenght > len(self.keys):
+            self.gen_keys(max(lenght, 2000000))
+
+    def decrypt(self, data):
+        self.ensure_keys(len(data))
+        data = bytearray(data)
+        for i in range(len(data)):
+            data[i] = data[i] ^ self.keys[i]
+        return data
+    

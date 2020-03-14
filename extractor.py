@@ -1,6 +1,6 @@
 import os, struct, zlib, tempfile, argparse
 from tqdm import tqdm
-from key import decrypt
+from key import Keys
 
 
 def readuint32(f):
@@ -67,6 +67,7 @@ def get_ext(data):
 def unpack(path, statusBar=None):
     folder_path = path.replace('.npk', '')
     os.mkdir(folder_path)
+    keys = Keys()
 
     with open(path, 'rb') as f:
         data = f.read(4)
@@ -89,7 +90,7 @@ def unpack(path, statusBar=None):
         index_table = []
         with tempfile.TemporaryFile() as tmp:
             data = f.read(files * 28)
-            data = decrypt(data)
+            data = keys.decrypt(data)
             tmp.write(data)
             tmp.seek(0)
             for _ in range(files):
@@ -117,7 +118,7 @@ def unpack(path, statusBar=None):
             f.seek(file_offset)
             data = f.read(file_length)
             if pkg_type:
-                data = decrypt(data)
+                data = keys.decrypt(data)
 
             if file_flag == 1:
                 data = zlib.decompress(data)
