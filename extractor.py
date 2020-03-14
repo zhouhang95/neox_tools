@@ -1,5 +1,6 @@
 import os, struct, zlib, tempfile, argparse
 from tqdm import tqdm
+from key import decrypt
 
 
 def readuint32(f):
@@ -62,11 +63,6 @@ def get_ext(data):
             return 'txt'
     return 'dat'
 
-def decrypt(data, keys):
-    data = bytearray(data)
-    for i in range(len(data)):
-        data[i] = data[i] ^ keys[i]
-    return data
 
 def unpack(path, statusBar=None):
     keys = []
@@ -76,7 +72,6 @@ def unpack(path, statusBar=None):
         for value in f:
             keys.append(int(value))
     max_length = len(keys)
-
 
     with open(path, 'rb') as f:
         data = f.read(4)
@@ -124,12 +119,12 @@ def unpack(path, statusBar=None):
                 statusBar.showMessage('{} / {}'.format(i, files))
             file_name = '{:8}.dat'.format(i)
             file_offset, file_length, file_original_length, file_flag = item
-            if file_length >= max_length or file_length < 5000:
+            if file_length < 5000:
                 continue
             f.seek(file_offset)
             data = f.read(file_length)
             if pkg_type:
-                data = decrypt(data, keys)
+                data = decrypt(data)
 
             if file_flag == 1:
                 data = zlib.decompress(data)
