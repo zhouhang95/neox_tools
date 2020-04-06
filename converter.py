@@ -529,20 +529,16 @@ def parse_mesh(path):
 
         model['uv'] = []
         # vertex uv
-        for mesh_vertex_count, _, _flag, _flag2 in model['mesh']:
+        for mesh_vertex_count, _, _flag, _ in model['mesh']:
             for _ in range(mesh_vertex_count):
                 u = readfloat(f)
                 v = readfloat(f)
                 model['uv'].append((u, v))
             f.read(mesh_vertex_count * 8 * (_flag - 1))
+
+        # vertex weight
+        for mesh_vertex_count, _, _, _flag2 in model['mesh']:
             f.read(mesh_vertex_count * 4 * _flag2)
-
-
-        _flag = readuint32(f)
-        f.seek(-4, 1)
-        if _flag == -1:
-            for _ in range(vertex_count):
-                f.read(4)
 
         if model['bone_exist']:
             model['vertex_joint'] = []
