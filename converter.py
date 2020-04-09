@@ -47,6 +47,7 @@ def saveobj(model, filename):
 def saveiqe(model, filename):
     model['bone_translate'] = []
     model['bone_rotation'] = []
+    bone_count = len(model['bone_parent'])
     for i in range(bone_count):
         matrix = tf.identity_matrix()
         parent_node = model['bone_parent'][i]
@@ -477,6 +478,13 @@ def parse_mesh(path):
                 matrix = [readfloat(f) for _ in range(16)]
                 matrix = np.array(matrix).reshape(4, 4)
                 model['bone_original_matrix'].append(matrix)
+
+            if len(list(filter(lambda x: x == -1, parent_nodes))) > 1:
+                num = len(model['bone_parent'])
+                model['bone_parent'] = list(map(lambda x: num if x == -1 else x, model['bone_parent']))
+                model['bone_parent'].append(-1)
+                model['bone_name'].append('dummy_root')
+                model['bone_original_matrix'].append(np.identity(4))
 
             _flag = readuint8(f) # 00
             assert _flag == 0
