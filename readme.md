@@ -4,11 +4,11 @@ python version is 3!
 
 Step 0
 ```
-pip install numpy transformations pymeshio tqdm
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl
 ```
 If you are in China, please use ...
 ```
-pip install numpy transformations pymeshio tqdm -i https://pypi.douban.com/simple
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl -i https://pypi.douban.com/simple
 ```
 Step 1
 ```
@@ -60,9 +60,11 @@ python converter.py mesh_file_path --mode iqe
 You can check this page for update:
 https://github.com/zhouhang95/neox_tools
 
-You can use this tool for view model:
-NeoX Model Viewer
-http://www.mediafire.com/file/m6d90s8j6wht2dd/RMA_Upd3.rar
-from this page
-Netease Games Tool + Research (Onmyoji, RoS, RMA etc.) - XeNTaX
-https://forum.xentax.com/viewtopic.php?f=16&t=17982
+Step 3
+```
+python main.py
+```
+File -> Load Unpack Folder
+
+
+then select the generated folder after unpacking
