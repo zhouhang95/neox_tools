@@ -79,7 +79,6 @@ def unpack(path, statusBar=None):
         else:
             raise Exception('NOT NXPK/EXPK FILE')
         files = readuint32(f)
-        # print(files)
         var1 = readuint32(f)
         var2 = readuint32(f)
         var3 = readuint32(f)
@@ -90,7 +89,8 @@ def unpack(path, statusBar=None):
         index_table = []
         with tempfile.TemporaryFile() as tmp:
             data = f.read(files * 28)
-            data = keys.decrypt(data)
+            if pkg_type:
+                data = keys.decrypt(data)
             tmp.write(data)
             tmp.seek(0)
             for _ in range(files):
