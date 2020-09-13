@@ -22,7 +22,6 @@ if you'll unpack Onmyoji game.
 you should use onmyoji_extractor.py rather than extractor.py
 
 ```
-copy/b res.npk.* res.npk
 python onmyoji_extractor.py res.npk
 ```
 
