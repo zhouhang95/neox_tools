@@ -19,25 +19,11 @@ example:
 python extractor.py hero1.npk
 ```
 if you'll unpack Onmyoji game.
-you should first rename these files like below:
+you should use onmyoji_extractor.py rather than extractor.py
 
-res.npk.0 -> res.npk.00
-
-res.npk.1 -> res.npk.01
-
-...
-
-res.npk.10 -> res.npk.10
-
-...
-
-res.npk.14 -> res.npk.14
-
-
-then:
 ```
 copy/b res.npk.* res.npk
-python extractor.py res.npk
+python onmyoji_extractor.py res.npk
 ```
 
 Step 2
