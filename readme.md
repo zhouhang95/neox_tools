@@ -6,7 +6,7 @@ python version is 3!
 
 Step 0
 ```
-pip install numpy transformations pymeshio tqdm pyqt5 moderngl
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr
 ```
 If you are in China, please use ...
 ```
