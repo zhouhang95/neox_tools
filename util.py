@@ -4,6 +4,7 @@ from PyQt5 import QtCore, QtOpenGL
 import moderngl
 
 from converter import parse_mesh
+from onmyoji_converter import _parse_mesh
 
 
 class QModernGLWidget(QtOpenGL.QGLWidget):
@@ -51,7 +52,10 @@ def res_from_path(path):
     return data_from_path('res/' + path)
 
 def mesh_from_path(path):
-    mesh = parse_mesh(path)
+    try:
+        mesh = parse_mesh(path)
+    except Exception as _:
+        mesh = _parse_mesh(path)
     pos = np.array(mesh['position'])
     pos[:,0] = -pos[:,0]
     norm = np.array(mesh['normal'])
