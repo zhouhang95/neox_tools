@@ -19,9 +19,8 @@ def _parse_mesh(path):
             bone_count = readuint16(f)
             parent_nodes = []
             for _ in range(bone_count):
-                parent_node = readuint8(f)
-                readuint8(f)
-                if parent_node == 255:
+                parent_node = readuint16(f)
+                if parent_node == 65535:
                     parent_node = -1
                 parent_nodes.append(parent_node)
             model['bone_parent'] = parent_nodes
@@ -118,7 +117,7 @@ def _parse_mesh(path):
         if model['bone_exist']:
             model['vertex_joint'] = []
             for _ in range(vertex_count):
-                vertex_joints = [readuint8(f) for _ in range(4)]
+                vertex_joints = [readuint16(f) for _ in range(4)]
                 model['vertex_joint'].append(vertex_joints)
 
             model['vertex_joint_weight'] = []
