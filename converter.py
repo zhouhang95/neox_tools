@@ -191,7 +191,10 @@ def savepmx(model, filename):
         x, y, z = model['position'][i]
         nx, ny, nz = model['normal'][i]
         u, v = model['uv'][i]
-        vertex_joint_index = list(map(lambda x: old2new[x] if x not in [255, 65535] else 0,model['vertex_joint'][i]))
+        if 65535 in model['vertex_joint'][i]:
+            vertex_joint_index = list(map(lambda x: old2new[x] if x != 65535 else 0,model['vertex_joint'][i]))
+        else:
+            vertex_joint_index = list(map(lambda x: old2new[x] if x != 255 else 0,model['vertex_joint'][i]))
 
         vertex = pmx.Vertex(
             common.Vector3(-x, y, -z),
