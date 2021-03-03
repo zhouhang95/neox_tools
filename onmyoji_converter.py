@@ -64,9 +64,9 @@ def _parse_mesh(path):
             mesh_vertex_count = readuint32(f)
             mesh_face_count = readuint32(f)
             _flag = readuint8(f)
-            _flag2 = readuint8(f)
+            color_len = readuint8(f)
 
-            model['mesh'].append((mesh_vertex_count, mesh_face_count, _flag, _flag2))
+            model['mesh'].append((mesh_vertex_count, mesh_face_count, _flag, color_len))
 
 
         vertex_count = readuint32(f)
@@ -103,16 +103,22 @@ def _parse_mesh(path):
 
         model['uv'] = []
         # vertex uv
-        for mesh_vertex_count, _, _flag, _ in model['mesh']:
-            for _ in range(mesh_vertex_count):
-                u = readfloat(f)
-                v = readfloat(f)
-                model['uv'].append((u, v))
-            f.read(mesh_vertex_count * 8 * (_flag - 1))
+        for mesh_vertex_count, _, uv_layers, _ in model['mesh']:
+            if uv_layers > 0:
+                for _ in range(mesh_vertex_count):
+                    u = readfloat(f)
+                    v = readfloat(f)
+                    model['uv'].append((u, v))
+                f.read(mesh_vertex_count * 8 * (uv_layers - 1))
+            else:
+                for _ in range(mesh_vertex_count):
+                    u = 0.0
+                    v = 0.0
+                    model['uv'].append((u, v))
 
-        # vertex weight
-        for mesh_vertex_count, _, _, _flag2 in model['mesh']:
-            f.read(mesh_vertex_count * 4 * _flag2)
+        # vertex color
+        for mesh_vertex_count, _, _, color_len in model['mesh']:
+            f.read(mesh_vertex_count * 4 * color_len)
 
         if model['bone_exist']:
             model['vertex_joint'] = []
