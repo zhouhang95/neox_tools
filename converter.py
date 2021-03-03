@@ -469,12 +469,10 @@ def parse_mesh(path):
                 bone_names.append(bone_name)
             model['bone_name'] = bone_names
 
-            flag = readuint8(f)
-            assert flag == 1
-
-
-            for _ in range(bone_count):
-                f.read(28)
+            bone_extra_info = readuint8(f)
+            if bone_extra_info:
+                for _ in range(bone_count):
+                    f.read(28)
 
             model['bone_original_matrix'] = []
             for i in range(bone_count):
