@@ -16,6 +16,10 @@ def _parse_mesh(path):
         model['mesh'] = []
 
         if model['bone_exist']:
+            if model['bone_exist'] > 1:
+                count = readuint8(f)
+                f.read(2)
+                f.read(count * 4)
             bone_count = readuint16(f)
             parent_nodes = []
             for _ in range(bone_count):
