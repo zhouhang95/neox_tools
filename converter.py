@@ -56,8 +56,7 @@ def savegltf(model, filename):
 
     vertex_bytearray = bytearray()
     for vertex in vertices:
-        for value in vertex:
-            vertex_bytearray.extend(struct.pack('f', value))
+        vertex_bytearray.extend(struct.pack('fff', *vertex))
     bytelen = len(vertex_bytearray)
     mins = [min([vertex[i] for vertex in vertices]) for i in range(3)]
     maxs = [max([vertex[i] for vertex in vertices]) for i in range(3)]
@@ -67,7 +66,7 @@ def savegltf(model, filename):
         nodes=[Node(mesh=0)],
         meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0))])],
         buffers=[Buffer(byteLength=bytelen, uri='vertices.bin')],
-        bufferViews=[BufferView(buffer=0, byteOffset=0, byteLength=bytelen, target=BufferTarget.ARRAY_BUFFER.value)],
+        bufferViews=[BufferView(buffer=0, byteOffset=0, byteLength=bytelen)],
         accessors=[Accessor(bufferView=0, byteOffset=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
                             type=AccessorType.VEC3.value, min=mins, max=maxs)]
     )
