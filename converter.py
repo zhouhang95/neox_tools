@@ -60,26 +60,35 @@ def savegltf(model, filename):
     for face in faces:
         faces_bytearray.extend(struct.pack('III', *face))
     
+    normals = model['normal']
+    normals_bytearray = bytearray()
+    for nx, ny, nz in normals:
+        normals_bytearray.extend(struct.pack('fff', nx, ny, nz))
+
     buffers = [
         Buffer(byteLength=len(vertex_bytearray), uri='vertices.bin'),
         Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
+        Buffer(byteLength=len(normals_bytearray), uri='normals.bin'),
     ]
     bufferViews = [
         BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
         BufferView(buffer=1, byteOffset=0, byteLength=len(faces_bytearray)),
+        BufferView(buffer=2, byteOffset=0, byteLength=len(normals_bytearray)),
     ]
     accessors = [
         Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
                 type=AccessorType.VEC3.value, min=mins, max=maxs),
         Accessor(bufferView=1, componentType=ComponentType.UNSIGNED_INT.value, count=len(faces) * 3,
                 type=AccessorType.SCALAR.value),
+        Accessor(bufferView=2, componentType=ComponentType.FLOAT.value, count=len(normals),
+                type=AccessorType.VEC3.value),
     ]
 
     model = GLTFModel(
         asset=Asset(version='2.0'),
         scenes=[Scene(nodes=[0])],
         nodes=[Node(mesh=0)],
-        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0), indices = 1)])],
+        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=2), indices = 1)])],
         buffers=buffers,
         bufferViews=bufferViews,
         accessors=accessors
@@ -88,6 +97,7 @@ def savegltf(model, filename):
     resources = [
         FileResource('vertices.bin', data=vertex_bytearray),
         FileResource('faces.bin', data=faces_bytearray),
+        FileResource('normals.bin', data=normals_bytearray),
     ]
     gltf = GLTF(model=model, resources=resources)
     gltf.export(filename.replace('.mesh', '.glb'))
