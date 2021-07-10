@@ -6,11 +6,11 @@ python version is 3!
 
 Step 0
 ```
-pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr gltflib
 ```
 If you are in China, please use ...
 ```
-pip install numpy transformations pymeshio tqdm pyqt5 moderngl -i https://pypi.douban.com/simple
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr gltflib -i https://pypi.douban.com/simple
 ```
 Step 1
 ```
