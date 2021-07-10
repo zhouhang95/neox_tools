@@ -48,32 +48,50 @@ def saveobj(model, filename):
             ))
 
 def savegltf(model, filename):
-    vertices = []
-    for v1, v2, v3 in model['face']:
-        vertices.append(model['position'][v1])
-        vertices.append(model['position'][v2])
-        vertices.append(model['position'][v3])
-
+    vertices = model['position']
     vertex_bytearray = bytearray()
     for vertex in vertices:
         vertex_bytearray.extend(struct.pack('fff', *vertex))
-    bytelen = len(vertex_bytearray)
     mins = [min([vertex[i] for vertex in vertices]) for i in range(3)]
     maxs = [max([vertex[i] for vertex in vertices]) for i in range(3)]
+
+    faces = model['face']
+    faces_bytearray = bytearray()
+    for face in faces:
+        faces_bytearray.extend(struct.pack('III', *face))
+    
+    buffer_bytearray = bytearray()
+    buffer_bytearray.extend(vertex_bytearray)
+    buffer_bytearray.extend(faces_bytearray)
+
+
+    buffers = [
+        Buffer(byteLength=len(buffer_bytearray), uri='vertices.bin'),
+    ]
+    bufferViews = [
+        BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
+        BufferView(buffer=0, byteOffset=len(vertex_bytearray), byteLength=len(faces_bytearray)),
+    ]
+    accessors = [
+        Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
+                type=AccessorType.VEC3.value, min=mins, max=maxs),
+        Accessor(bufferView=1, componentType=ComponentType.UNSIGNED_INT.value, count=len(faces) * 3,
+                type=AccessorType.SCALAR.value),
+    ]
+
     model = GLTFModel(
         asset=Asset(version='2.0'),
         scenes=[Scene(nodes=[0])],
         nodes=[Node(mesh=0)],
-        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0))])],
-        buffers=[Buffer(byteLength=bytelen, uri='vertices.bin')],
-        bufferViews=[BufferView(buffer=0, byteOffset=0, byteLength=bytelen)],
-        accessors=[Accessor(bufferView=0, byteOffset=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
-                            type=AccessorType.VEC3.value, min=mins, max=maxs)]
+        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0), indices = 1)])],
+        buffers=buffers,
+        bufferViews=bufferViews,
+        accessors=accessors
     )
 
-    resource = FileResource('vertices.bin', data=vertex_bytearray)
+    resource = FileResource('vertices.bin', data=buffer_bytearray)
     gltf = GLTF(model=model, resources=[resource])
-    gltf.export(filename.replace('.mesh', '.glb'))
+    gltf.export(filename.replace('.mesh', '.gltf'))
 
 def saveiqe(model, filename):
     model['bone_translate'] = []
