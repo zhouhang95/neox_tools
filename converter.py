@@ -6,6 +6,9 @@ import pymeshio.common as common
 import pymeshio.pmx.writer
 import pymeshio.pmx.reader
 from bone_name import *
+from gltflib import (
+    GLTF, GLTFModel, Asset, Scene, Node, Mesh, Primitive, Attributes, Buffer, BufferView, Accessor, AccessorType,
+    BufferTarget, ComponentType, GLBResource, FileResource)
 
 
 def readuint8(f):
@@ -23,7 +26,7 @@ def readfloat(f):
 def get_parser():
     parser = argparse.ArgumentParser(description='NeoX Model Conveter')
     parser.add_argument('path', type=str)
-    parser.add_argument('--mode', type=str, choices=['obj', 'iqe', 'pmx'], default='pmx')
+    parser.add_argument('--mode', type=str, choices=['obj', 'iqe', 'pmx', 'gltf'], default='pmx')
     opt = parser.parse_args()
     return opt
 
@@ -43,6 +46,35 @@ def saveobj(model, filename):
                 v1+1,v1+1,v1+1,
                 v3+1,v3+1,v3+1
             ))
+
+def savegltf(model, filename):
+    vertices = []
+    for v1, v2, v3 in model['face']:
+        vertices.append(model['position'][v1])
+        vertices.append(model['position'][v2])
+        vertices.append(model['position'][v3])
+
+    vertex_bytearray = bytearray()
+    for vertex in vertices:
+        for value in vertex:
+            vertex_bytearray.extend(struct.pack('f', value))
+    bytelen = len(vertex_bytearray)
+    mins = [min([vertex[i] for vertex in vertices]) for i in range(3)]
+    maxs = [max([vertex[i] for vertex in vertices]) for i in range(3)]
+    model = GLTFModel(
+        asset=Asset(version='2.0'),
+        scenes=[Scene(nodes=[0])],
+        nodes=[Node(mesh=0)],
+        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0))])],
+        buffers=[Buffer(byteLength=bytelen, uri='vertices.bin')],
+        bufferViews=[BufferView(buffer=0, byteOffset=0, byteLength=bytelen, target=BufferTarget.ARRAY_BUFFER.value)],
+        accessors=[Accessor(bufferView=0, byteOffset=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
+                            type=AccessorType.VEC3.value, min=mins, max=maxs)]
+    )
+
+    resource = FileResource('vertices.bin', data=vertex_bytearray)
+    gltf = GLTF(model=model, resources=[resource])
+    gltf.export(filename.replace('.mesh', '.glb'))
 
 def saveiqe(model, filename):
     model['bone_translate'] = []
@@ -582,6 +614,8 @@ def main():
         saveiqe(model, opt.path)
     elif opt.mode == 'pmx':
         savepmx(model, opt.path)
+    elif opt.mode == 'gltf':
+        savegltf(model, opt.path)
 
 
 if __name__ == '__main__':
