@@ -60,17 +60,13 @@ def savegltf(model, filename):
     for face in faces:
         faces_bytearray.extend(struct.pack('III', *face))
     
-    buffer_bytearray = bytearray()
-    buffer_bytearray.extend(vertex_bytearray)
-    buffer_bytearray.extend(faces_bytearray)
-
-
     buffers = [
-        Buffer(byteLength=len(buffer_bytearray), uri='vertices.bin'),
+        Buffer(byteLength=len(vertex_bytearray), uri='vertices.bin'),
+        Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
     ]
     bufferViews = [
         BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
-        BufferView(buffer=0, byteOffset=len(vertex_bytearray), byteLength=len(faces_bytearray)),
+        BufferView(buffer=1, byteOffset=0, byteLength=len(faces_bytearray)),
     ]
     accessors = [
         Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
@@ -89,9 +85,12 @@ def savegltf(model, filename):
         accessors=accessors
     )
 
-    resource = FileResource('vertices.bin', data=buffer_bytearray)
-    gltf = GLTF(model=model, resources=[resource])
-    gltf.export(filename.replace('.mesh', '.gltf'))
+    resources = [
+        FileResource('vertices.bin', data=vertex_bytearray),
+        FileResource('faces.bin', data=faces_bytearray),
+    ]
+    gltf = GLTF(model=model, resources=resources)
+    gltf.export(filename.replace('.mesh', '.glb'))
 
 def saveiqe(model, filename):
     model['bone_translate'] = []
