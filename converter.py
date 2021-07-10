@@ -65,15 +65,22 @@ def savegltf(model, filename):
     for nx, ny, nz in normals:
         normals_bytearray.extend(struct.pack('fff', nx, ny, nz))
 
+    uvs = model['uv']
+    uvs_bytearray = bytearray()
+    for uv in uvs:
+        uvs_bytearray.extend(struct.pack('ff', *uv))
+
     buffers = [
         Buffer(byteLength=len(vertex_bytearray), uri='vertices.bin'),
         Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
         Buffer(byteLength=len(normals_bytearray), uri='normals.bin'),
+        Buffer(byteLength=len(uvs_bytearray), uri='uvs.bin'),
     ]
     bufferViews = [
         BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
         BufferView(buffer=1, byteOffset=0, byteLength=len(faces_bytearray)),
         BufferView(buffer=2, byteOffset=0, byteLength=len(normals_bytearray)),
+        BufferView(buffer=3, byteOffset=0, byteLength=len(uvs_bytearray)),
     ]
     accessors = [
         Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
@@ -82,13 +89,15 @@ def savegltf(model, filename):
                 type=AccessorType.SCALAR.value),
         Accessor(bufferView=2, componentType=ComponentType.FLOAT.value, count=len(normals),
                 type=AccessorType.VEC3.value),
+        Accessor(bufferView=3, componentType=ComponentType.FLOAT.value, count=len(uvs),
+                type=AccessorType.VEC2.value),
     ]
 
     model = GLTFModel(
         asset=Asset(version='2.0'),
         scenes=[Scene(nodes=[0])],
         nodes=[Node(mesh=0)],
-        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=2), indices = 1)])],
+        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=2, TEXCOORD_0=3), indices = 1)])],
         buffers=buffers,
         bufferViews=bufferViews,
         accessors=accessors
@@ -98,6 +107,7 @@ def savegltf(model, filename):
         FileResource('vertices.bin', data=vertex_bytearray),
         FileResource('faces.bin', data=faces_bytearray),
         FileResource('normals.bin', data=normals_bytearray),
+        FileResource('uvs.bin', data=uvs_bytearray),
     ]
     gltf = GLTF(model=model, resources=resources)
     gltf.export(filename.replace('.mesh', '.glb'))
