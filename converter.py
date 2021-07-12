@@ -72,32 +72,32 @@ def savegltf(model, filename):
 
     buffers = [
         Buffer(byteLength=len(vertex_bytearray), uri='vertices.bin'),
-        Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
         Buffer(byteLength=len(normals_bytearray), uri='normals.bin'),
         Buffer(byteLength=len(uvs_bytearray), uri='uvs.bin'),
+        Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
     ]
     bufferViews = [
         BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
-        BufferView(buffer=1, byteOffset=0, byteLength=len(faces_bytearray)),
-        BufferView(buffer=2, byteOffset=0, byteLength=len(normals_bytearray)),
-        BufferView(buffer=3, byteOffset=0, byteLength=len(uvs_bytearray)),
+        BufferView(buffer=1, byteOffset=0, byteLength=len(normals_bytearray)),
+        BufferView(buffer=2, byteOffset=0, byteLength=len(uvs_bytearray)),
+        BufferView(buffer=3, byteOffset=0, byteLength=len(faces_bytearray)),
     ]
     accessors = [
         Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
                 type=AccessorType.VEC3.value, min=mins, max=maxs),
-        Accessor(bufferView=1, componentType=ComponentType.UNSIGNED_INT.value, count=len(faces) * 3,
-                type=AccessorType.SCALAR.value),
-        Accessor(bufferView=2, componentType=ComponentType.FLOAT.value, count=len(normals),
+        Accessor(bufferView=1, componentType=ComponentType.FLOAT.value, count=len(normals),
                 type=AccessorType.VEC3.value),
-        Accessor(bufferView=3, componentType=ComponentType.FLOAT.value, count=len(uvs),
+        Accessor(bufferView=2, componentType=ComponentType.FLOAT.value, count=len(uvs),
                 type=AccessorType.VEC2.value),
+        Accessor(bufferView=3, componentType=ComponentType.UNSIGNED_INT.value, count=len(faces) * 3,
+                type=AccessorType.SCALAR.value),
     ]
 
     model = GLTFModel(
         asset=Asset(version='2.0'),
         scenes=[Scene(nodes=[0])],
         nodes=[Node(mesh=0)],
-        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=2, TEXCOORD_0=3), indices = 1)])],
+        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=1, TEXCOORD_0=2), indices = 3)])],
         buffers=buffers,
         bufferViews=bufferViews,
         accessors=accessors
@@ -105,9 +105,9 @@ def savegltf(model, filename):
 
     resources = [
         FileResource('vertices.bin', data=vertex_bytearray),
-        FileResource('faces.bin', data=faces_bytearray),
         FileResource('normals.bin', data=normals_bytearray),
         FileResource('uvs.bin', data=uvs_bytearray),
+        FileResource('faces.bin', data=faces_bytearray),
     ]
     gltf = GLTF(model=model, resources=resources)
     gltf.export(filename.replace('.mesh', '.glb'))
