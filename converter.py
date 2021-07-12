@@ -76,11 +76,15 @@ def savegltf(model, filename):
         Buffer(byteLength=len(uvs_bytearray), uri='uvs.bin'),
         Buffer(byteLength=len(faces_bytearray), uri='faces.bin'),
     ]
+    fc = list(map(lambda v: v[1] * 3, model['mesh']))
     bufferViews = [
         BufferView(buffer=0, byteOffset=0, byteLength=len(vertex_bytearray)),
         BufferView(buffer=1, byteOffset=0, byteLength=len(normals_bytearray)),
         BufferView(buffer=2, byteOffset=0, byteLength=len(uvs_bytearray)),
-        BufferView(buffer=3, byteOffset=0, byteLength=len(faces_bytearray)),
+    ]
+    bufferViews += [
+        BufferView(buffer=3, byteOffset=sum(fc[:i]) * 4, byteLength=fc[i] * 4)
+        for i in range(len(model['mesh']))
     ]
     accessors = [
         Accessor(bufferView=0, componentType=ComponentType.FLOAT.value, count=len(vertices),
@@ -89,15 +93,23 @@ def savegltf(model, filename):
                 type=AccessorType.VEC3.value),
         Accessor(bufferView=2, componentType=ComponentType.FLOAT.value, count=len(uvs),
                 type=AccessorType.VEC2.value),
-        Accessor(bufferView=3, componentType=ComponentType.UNSIGNED_INT.value, count=len(faces) * 3,
-                type=AccessorType.SCALAR.value),
     ]
+    accessors += [
+        Accessor(bufferView=3+i, componentType=ComponentType.UNSIGNED_INT.value, count=fc[i],
+                type=AccessorType.SCALAR.value)
+        for i in range(len(model['mesh']))
+    ]
+    meshes = [
+        Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=1, TEXCOORD_0=2), indices=3+i)])
+        for i in range(len(model['mesh']))
+    ]
+
 
     model = GLTFModel(
         asset=Asset(version='2.0'),
-        scenes=[Scene(nodes=[0])],
-        nodes=[Node(mesh=0)],
-        meshes=[Mesh(primitives=[Primitive(attributes=Attributes(POSITION=0, NORMAL=1, TEXCOORD_0=2), indices = 3)])],
+        scenes=[Scene(nodes=list(range(len(model['mesh']))))],
+        nodes=[Node(mesh=i) for i in range(len(model['mesh']))],
+        meshes=meshes,
         buffers=buffers,
         bufferViews=bufferViews,
         accessors=accessors
