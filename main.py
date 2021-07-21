@@ -13,8 +13,9 @@ from converter import saveobj, saveiqe, savepmx
 
 class CentralWidget(QSplitter):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent)
+        self.statusBar = parent.statusBar
         self.listWidget = QListWidget(self)
         self.viewer = ViewerWidget(self)
         self.paths = []
@@ -34,6 +35,7 @@ class CentralWidget(QSplitter):
             self.name = self.names[current_row]
             self.mesh = mesh_from_path(path)
             self.viewer.load_mesh(self.mesh)
+            self.statusBar.showMessage('Face count: {}'.format(len(self.mesh['face'])))
 
     def init_load_mesh(self):
         if (len(self.paths) > 0):
@@ -89,12 +91,12 @@ class MyApp(QMainWindow):
         self.about.addAction('Home Page', self.cb_openHomePage)
         self.about.addAction('Help', self.cb_help)
 
-        self.centralWidget = CentralWidget(self)
-        self.setCentralWidget(self.centralWidget)
-
         self.statusBar = QStatusBar()
         self.statusBar.showMessage('Author: zhouhang95')
         self.setStatusBar(self.statusBar)
+
+        self.centralWidget = CentralWidget(self)
+        self.setCentralWidget(self.centralWidget)
 
         self.show()
 
