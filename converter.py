@@ -253,6 +253,8 @@ def savepmx(model, filename):
             bone.name = paj_bone_name[bone.english_name][0]
             bone.english_name = paj_bone_name[bone.english_name][1]
 
+    pymeshio.pmx.writer.write_to_file(pmx_model, filename + '_replace.pmx')
+
     def add_bone(pmxm, bone, index):
         assert index <= len(pmxm.bones)
         pmxm.bones.insert(index, bone)
@@ -281,169 +283,172 @@ def savepmx(model, filename):
         return ret
 
     #######################
-    parent_node_index = find_bone_index_by_name(pmx_model, 'ParentNode')
+    try:
+        parent_node_index = find_bone_index_by_name(pmx_model, 'ParentNode')
 
-    center_bone = pmx.Bone(
-                name='センター',
-                english_name='Center',
-                position=common.Vector3(0, 8.0, 0),
-                parent_index=parent_node_index,
-                layer=0,
-                flag=0
-            )
-    center_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-    center_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-    center_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+        center_bone = pmx.Bone(
+                    name='センター',
+                    english_name='Center',
+                    position=common.Vector3(0, 8.0, 0),
+                    parent_index=parent_node_index,
+                    layer=0,
+                    flag=0
+                )
+        center_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+        center_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+        center_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
 
-    waist_index = find_bone_index_by_name(pmx_model, 'Waist')
-    center_index = add_bone(pmx_model, center_bone, waist_index)
-
-
-    groove_bone = pmx.Bone(
-                name='グルーブ',
-                english_name='Groove',
-                position=common.Vector3(0, 8.2, 0),
-                parent_index=center_index,
-                layer=0,
-                flag=0
-            )
-    groove_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-    groove_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-    groove_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-    waist_index = find_bone_index_by_name(pmx_model, 'Waist')
-    groove_index = add_bone(pmx_model, groove_bone, waist_index)
-
-    waist_index = find_bone_index_by_name(pmx_model, 'Waist')
-    pmx_model.bones[waist_index].parent_index = groove_index
-
-    waist_index = find_bone_index_by_name(pmx_model, 'Waist')
-    upper_body_index = find_bone_index_by_name(pmx_model, 'UpperBody')
-    pmx_model.bones[upper_body_index].parent_index = waist_index
+        waist_index = find_bone_index_by_name(pmx_model, 'Waist')
+        center_index = add_bone(pmx_model, center_bone, waist_index)
 
 
+        groove_bone = pmx.Bone(
+                    name='グルーブ',
+                    english_name='Groove',
+                    position=common.Vector3(0, 8.2, 0),
+                    parent_index=center_index,
+                    layer=0,
+                    flag=0
+                )
+        groove_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+        groove_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+        groove_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+        waist_index = find_bone_index_by_name(pmx_model, 'Waist')
+        groove_index = add_bone(pmx_model, groove_bone, waist_index)
 
-    ##########################
-    for LR in ['Left', 'Right']:
-        ankle_index = find_bone_index_by_name(pmx_model, '{}Ankle'.format(LR))
-        ankle_x, ankle_y, ankle_z = pmx_model.bones[ankle_index].position.to_tuple()
-        toe_index = find_bone_index_by_name(pmx_model, '{}Toe'.format(LR))
-        toe_vec = pmx_model.bones[toe_index].position
-        toe_vec.y = ankle_y - 1.0
-        toe_vec.z = -1.65
-        leg_ik_parent_bone = pmx.Bone(
-                name='左足IK親' if LR == 'Left' else '右足IK親',
-                english_name='{}LegIkParent'.format(LR),
-                position=common.Vector3(ankle_x, 0, ankle_z),
-                parent_index=parent_node_index,
-                layer=0,
-                flag=0
-            )
-        leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-        leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
-        leg_ik_parent_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-        leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-        leg_ik_parent_index = add_bone(pmx_model, leg_ik_parent_bone, len(pmx_model.bones))
+        waist_index = find_bone_index_by_name(pmx_model, 'Waist')
+        pmx_model.bones[waist_index].parent_index = groove_index
 
-        leg_ik_bone = pmx.Bone(
-                name='左足ＩＫ' if LR == 'Left' else '右足ＩＫ',
-                english_name='{}LegIk'.format(LR),
-                position=common.Vector3(ankle_x, ankle_y, ankle_z),
-                parent_index=leg_ik_parent_index,
-                layer=0,
-                flag=0
-            )
-
-        leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-        leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
-        leg_ik_bone.setFlag(pmx.BONEFLAG_IS_IK, True)
-        leg_ik_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-        leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-
-        knee_index = find_bone_index_by_name(pmx_model, '{}Knee'.format(LR))
-        leg_index = find_bone_index_by_name(pmx_model, '{}Leg'.format(LR))
-        leg_ik_link = [
-            pmx.IkLink(knee_index, 1, common.Vector3(-180.0/57.325, 0, 0), common.Vector3(-0.5/57.325, 0, 0)),
-            pmx.IkLink(leg_index, 0)
-        ]
-        leg_ik_bone.ik = pmx.Ik(ankle_index, 40, 2, leg_ik_link)
-        leg_ik_index = add_bone(pmx_model, leg_ik_bone, len(pmx_model.bones))
-
-        toe_ik_bone = pmx.Bone(
-                name='左つま先ＩＫ' if LR == 'Left' else '右つま先ＩＫ',
-                english_name='{}LegIk'.format(LR),
-                position=common.Vector3(toe_vec.x, toe_vec.y, toe_vec.z),
-                parent_index=leg_ik_index,
-                layer=0,
-                flag=0
-            )
-        toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-        toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
-        toe_ik_bone.setFlag(pmx.BONEFLAG_IS_IK, True)
-        toe_ik_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-        toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-        toe_ik_bone.ik = pmx.Ik(toe_index, 3, 4, [
-            pmx.IkLink(ankle_index, 0)
-        ])
-        add_bone(pmx_model, toe_ik_bone, len(pmx_model.bones))
-
-
-    '''
-    # build local axis and get rotation
-    left_arm_index = find_bone_index_by_name(pmx_model, 'LeftArm')
-    left_elbow_index = find_bone_index_by_name(pmx_model, 'LeftElbow')
-    left_wrist_index = find_bone_index_by_name(pmx_model, 'LeftWrist')
-    larm_pos = np.array(list(pmx_model.bones[left_arm_index].position.to_tuple()))
-    lelbow_pos = np.array(list(pmx_model.bones[left_elbow_index].position.to_tuple()))
-    lwrist_pos = np.array(list(pmx_model.bones[left_wrist_index].position.to_tuple()))
-    vec_ew = lwrist_pos - lelbow_pos
-    vec_ea = larm_pos - lelbow_pos
-    vec_ew = vec_ew / np.linalg.norm(vec_ew)
-    vec_ea = vec_ea / np.linalg.norm(vec_ea)
-    cos_ew_ea = np.dot(vec_ea, vec_ew)
-    if -1 * math.cos(3/180 * 3.14) < cos_ew_ea and cos_ew_ea < 0:
-        y_axis = np.cross(vec_ew, vec_ea)
-        y_axis = y_axis / np.linalg.norm(y_axis)
-        z_axis = np.cross(vec_ea, y_axis)
-        z_axis = z_axis / np.linalg.norm(z_axis)
-        x_axis = np.cross(z_axis, y_axis)
-        x_axis = x_axis / np.linalg.norm(x_axis)
-        # pmx_model.bones[left_elbow_index].setFlag(pmx.BONEFLAG_HAS_LOCAL_COORDINATE, True)
-        pmx_model.bones[left_elbow_index].local_x_vector = common.Vector3(*x_axis.tolist())
-        pmx_model.bones[left_elbow_index].local_z_vector = common.Vector3(*z_axis.tolist())
-    '''
-    head_index = find_bone_index_by_name(pmx_model, 'Head')
-    eyes_bone = pmx.Bone(
-                name='両目',
-                english_name='Eyes',
-                position=common.Vector3(0, 25, 0),
-                parent_index=head_index,
-                layer=0,
-                flag=0
-            )
-    eyes_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
-    eyes_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
-    eyes_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
-
-    pmx_model.bones.append(eyes_bone)
-    eyes_index = find_bone_index_by_name(pmx_model, 'Eyes')
-    for LR in 'lr':
-        eyeball_index = find_bone_index_by_name(pmx_model, 'bone_eyeball_{}'.format(LR))
-        pmx_model.bones[eyeball_index].effect_index = eyes_index
-        pmx_model.bones[eyeball_index].effect_factor = 2.2
-        pmx_model.bones[eyeball_index].setFlag(pmx.BONEFLAG_IS_EXTERNAL_ROTATION, True)
+        waist_index = find_bone_index_by_name(pmx_model, 'Waist')
+        upper_body_index = find_bone_index_by_name(pmx_model, 'UpperBody')
+        pmx_model.bones[upper_body_index].parent_index = waist_index
 
 
 
-    '''
-    morph_ref_model = pymeshio.pmx.reader.read_from_file('morph_ref')
-    pmx_model.morphs = morph_ref_model.morphs
-    for morph in pmx_model.morphs:
-        for offset in morph.offsets:
-            bone_english_name = morph_ref_model.bones[offset.bone_index].english_name
-            offset.bone_index = find_bone_index_by_name(pmx_model, bone_english_name)
-    '''
+        ##########################
+        for LR in ['Left', 'Right']:
+            ankle_index = find_bone_index_by_name(pmx_model, '{}Ankle'.format(LR))
+            ankle_x, ankle_y, ankle_z = pmx_model.bones[ankle_index].position.to_tuple()
+            toe_index = find_bone_index_by_name(pmx_model, '{}Toe'.format(LR))
+            toe_vec = pmx_model.bones[toe_index].position
+            toe_vec.y = ankle_y - 1.0
+            toe_vec.z = -1.65
+            leg_ik_parent_bone = pmx.Bone(
+                    name='左足IK親' if LR == 'Left' else '右足IK親',
+                    english_name='{}LegIkParent'.format(LR),
+                    position=common.Vector3(ankle_x, 0, ankle_z),
+                    parent_index=parent_node_index,
+                    layer=0,
+                    flag=0
+                )
+            leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+            leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
+            leg_ik_parent_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+            leg_ik_parent_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+            leg_ik_parent_index = add_bone(pmx_model, leg_ik_parent_bone, len(pmx_model.bones))
 
-    pymeshio.pmx.writer.write_to_file(pmx_model, filename + '_modified.pmx')
+            leg_ik_bone = pmx.Bone(
+                    name='左足ＩＫ' if LR == 'Left' else '右足ＩＫ',
+                    english_name='{}LegIk'.format(LR),
+                    position=common.Vector3(ankle_x, ankle_y, ankle_z),
+                    parent_index=leg_ik_parent_index,
+                    layer=0,
+                    flag=0
+                )
+
+            leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+            leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
+            leg_ik_bone.setFlag(pmx.BONEFLAG_IS_IK, True)
+            leg_ik_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+            leg_ik_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+
+            knee_index = find_bone_index_by_name(pmx_model, '{}Knee'.format(LR))
+            leg_index = find_bone_index_by_name(pmx_model, '{}Leg'.format(LR))
+            leg_ik_link = [
+                pmx.IkLink(knee_index, 1, common.Vector3(-180.0/57.325, 0, 0), common.Vector3(-0.5/57.325, 0, 0)),
+                pmx.IkLink(leg_index, 0)
+            ]
+            leg_ik_bone.ik = pmx.Ik(ankle_index, 40, 2, leg_ik_link)
+            leg_ik_index = add_bone(pmx_model, leg_ik_bone, len(pmx_model.bones))
+
+            toe_ik_bone = pmx.Bone(
+                    name='左つま先ＩＫ' if LR == 'Left' else '右つま先ＩＫ',
+                    english_name='{}LegIk'.format(LR),
+                    position=common.Vector3(toe_vec.x, toe_vec.y, toe_vec.z),
+                    parent_index=leg_ik_index,
+                    layer=0,
+                    flag=0
+                )
+            toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+            toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_TRANSLATE, True)
+            toe_ik_bone.setFlag(pmx.BONEFLAG_IS_IK, True)
+            toe_ik_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+            toe_ik_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+            toe_ik_bone.ik = pmx.Ik(toe_index, 3, 4, [
+                pmx.IkLink(ankle_index, 0)
+            ])
+            add_bone(pmx_model, toe_ik_bone, len(pmx_model.bones))
+
+
+        '''
+        # build local axis and get rotation
+        left_arm_index = find_bone_index_by_name(pmx_model, 'LeftArm')
+        left_elbow_index = find_bone_index_by_name(pmx_model, 'LeftElbow')
+        left_wrist_index = find_bone_index_by_name(pmx_model, 'LeftWrist')
+        larm_pos = np.array(list(pmx_model.bones[left_arm_index].position.to_tuple()))
+        lelbow_pos = np.array(list(pmx_model.bones[left_elbow_index].position.to_tuple()))
+        lwrist_pos = np.array(list(pmx_model.bones[left_wrist_index].position.to_tuple()))
+        vec_ew = lwrist_pos - lelbow_pos
+        vec_ea = larm_pos - lelbow_pos
+        vec_ew = vec_ew / np.linalg.norm(vec_ew)
+        vec_ea = vec_ea / np.linalg.norm(vec_ea)
+        cos_ew_ea = np.dot(vec_ea, vec_ew)
+        if -1 * math.cos(3/180 * 3.14) < cos_ew_ea and cos_ew_ea < 0:
+            y_axis = np.cross(vec_ew, vec_ea)
+            y_axis = y_axis / np.linalg.norm(y_axis)
+            z_axis = np.cross(vec_ea, y_axis)
+            z_axis = z_axis / np.linalg.norm(z_axis)
+            x_axis = np.cross(z_axis, y_axis)
+            x_axis = x_axis / np.linalg.norm(x_axis)
+            # pmx_model.bones[left_elbow_index].setFlag(pmx.BONEFLAG_HAS_LOCAL_COORDINATE, True)
+            pmx_model.bones[left_elbow_index].local_x_vector = common.Vector3(*x_axis.tolist())
+            pmx_model.bones[left_elbow_index].local_z_vector = common.Vector3(*z_axis.tolist())
+        '''
+        head_index = find_bone_index_by_name(pmx_model, 'Head')
+        eyes_bone = pmx.Bone(
+                    name='両目',
+                    english_name='Eyes',
+                    position=common.Vector3(0, 25, 0),
+                    parent_index=head_index,
+                    layer=0,
+                    flag=0
+                )
+        eyes_bone.setFlag(pmx.BONEFLAG_CAN_ROTATE, True)
+        eyes_bone.setFlag(pmx.BONEFLAG_IS_VISIBLE, True)
+        eyes_bone.setFlag(pmx.BONEFLAG_CAN_MANIPULATE, True)
+
+        pmx_model.bones.append(eyes_bone)
+        eyes_index = find_bone_index_by_name(pmx_model, 'Eyes')
+        for LR in 'lr':
+            eyeball_index = find_bone_index_by_name(pmx_model, 'bone_eyeball_{}'.format(LR))
+            pmx_model.bones[eyeball_index].effect_index = eyes_index
+            pmx_model.bones[eyeball_index].effect_factor = 2.2
+            pmx_model.bones[eyeball_index].setFlag(pmx.BONEFLAG_IS_EXTERNAL_ROTATION, True)
+
+
+
+        '''
+        morph_ref_model = pymeshio.pmx.reader.read_from_file('morph_ref')
+        pmx_model.morphs = morph_ref_model.morphs
+        for morph in pmx_model.morphs:
+            for offset in morph.offsets:
+                bone_english_name = morph_ref_model.bones[offset.bone_index].english_name
+                offset.bone_index = find_bone_index_by_name(pmx_model, bone_english_name)
+        '''
+
+        pymeshio.pmx.writer.write_to_file(pmx_model, filename + '_modified.pmx')
+    except Exception:
+        pass
 
 def parse_mesh(path):
     model = {}
