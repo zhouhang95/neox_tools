@@ -35,7 +35,10 @@ class CentralWidget(QSplitter):
             self.name = self.names[current_row]
             self.mesh = mesh_from_path(path)
             self.viewer.load_mesh(self.mesh)
-            self.statusBar.showMessage('Face count: {}'.format(len(self.mesh['face'])))
+            self.statusBar.showMessage('Face {}, Bone: {}'.format(
+                len(self.mesh['face']),
+                len(self.mesh['bone_name']) if self.mesh['bone_exist'] else 0
+            ))
 
     def init_load_mesh(self):
         if (len(self.paths) > 0):
