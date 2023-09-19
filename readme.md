@@ -10,7 +10,7 @@ pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr
 ```
 If you are in China, please use ...
 ```
-pip install numpy transformations pymeshio tqdm pyqt5 moderngl -i https://pypi.douban.com/simple
+pip install numpy transformations pymeshio tqdm pyqt5 moderngl pyrr -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 Step 1
 ```
