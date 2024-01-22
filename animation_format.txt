@@ -1,0 +1,369 @@
+https://airtest-refactor.doc.io.netease.com/arttoolsuite-project-docs/ArtEase/md/neox/binary-rule/
+
+2.gis规则
+
+gis文件目前支持的内容也与引擎版本有关，目前屏蔽track功能扩展支持的版本，文件内容通过Struct以固定字节的方式解析出来，参考格式为：
+
+Container: 
+    header = Container: 
+        file_mark = anim (total 4)
+        version = 50724865
+        file_version = 393217
+        file_version_mask = 3
+    anim_count = 5
+    bone_count = 3
+    bone_names = ListContainer: 
+        b'bone001'
+        b'bone002'
+        b'root'
+    bone_trans = ListContainer: 
+        Container: 
+            pos = ListContainer: 
+                0.0
+                4.044138431549072
+                -3.159993298140762e-07
+            rot = ListContainer: 
+                1.4527657299368002e-08
+                -1.4527657299368002e-08
+                0.7071068286895752
+                0.7071068286895752
+            scale = ListContainer: 
+                1.0
+                1.0
+                1.0
+        Container: 
+            pos = ListContainer: 
+                0.0
+                1.0272369384765625
+                -0.025091886520385742
+            rot = ListContainer: 
+                0.5000001192092896
+                0.4999999403953552
+                -0.49999988079071045
+                -0.5000000596046448
+            scale = ListContainer: 
+                1.0
+                1.0
+                1.0
+        Container: 
+            pos = ListContainer: 
+                0.0
+                0.0
+                0.0
+            rot = ListContainer: 
+                0.0
+                0.0
+                0.0
+                1.0
+            scale = ListContainer: 
+                1.0
+                1.0
+                1.0
+    seperate_storage = 0
+    base_size = None
+    anim = ListContainer: 
+        Container: 
+            name = obtain (total 6)
+            anim_root_name = root (total 4)
+            bone_count = 3
+            bone_names = ListContainer: 
+                b'bone001'
+                b'bone002'
+                b'root'
+            sample_fps = 30
+            loop = False
+            has_scaled = True
+            prs_flags = 7
+            accum_flags = 0
+            pack_prs_flags = 6
+            bone_separate_flags = 0
+            keys_data = Container: 
+                key_count = 16
+                key_times = ListContainer: 
+                    0.0
+                    33.33333206176758
+                    66.66666412353516
+                    100.0
+                    133.3333282470703
+                    166.6666717529297
+                    200.0
+                    233.3333282470703
+                    266.6666564941406
+                    300.0
+                    333.3333435058594
+                    366.6666564941406
+                    400.0
+                    433.3333435058594
+                    466.6666564941406
+                    500.0
+                key_data = ListContainer: 
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = True
+                        euler_flags = False
+                        position_key_count = 16
+                        positions = <LazyRangeContainer: 16 possible items, 0 cached>
+                        rot_key_count = 16
+                        rot = <LazyRangeContainer: 16 possible items, 0 cached>
+                        scale_key_count = 16
+                        scales = <LazyRangeContainer: 16 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = True
+                        euler_flags = False
+                        position_key_count = 16
+                        positions = <LazyRangeContainer: 16 possible items, 0 cached>
+                        rot_key_count = 16
+                        rot = <LazyRangeContainer: 16 possible items, 0 cached>
+                        scale_key_count = 16
+                        scales = <LazyRangeContainer: 16 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = False
+                        has_rot_keys = False
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 1
+                        positions = <LazyRangeContainer: 1 possible items, 0 cached>
+                        rot_key_count = 1
+                        rot = <LazyRangeContainer: 1 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+            pivot = Container: 
+                has_pivot_track = False
+                track_data = None
+        Container: 
+            name = idle (total 4)
+            anim_root_name = root (total 4)
+            bone_count = 3
+            bone_names = ListContainer: 
+                b'bone001'
+                b'bone002'
+                b'root'
+            sample_fps = 30
+            loop = True
+            has_scaled = True
+            prs_flags = 7
+            accum_flags = 0
+            pack_prs_flags = 6
+            bone_separate_flags = 0
+            keys_data = Container: 
+                key_count = 101
+                key_times = ListContainer: 
+                    0.0
+                    33.33333206176758
+                    66.66666412353516
+                key_data = ListContainer: 
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 101
+                        positions = <LazyRangeContainer: 101 possible items, 0 cached>
+                        rot_key_count = 101
+                        rot = <LazyRangeContainer: 101 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 101
+                        positions = <LazyRangeContainer: 101 possible items, 0 cached>
+                        rot_key_count = 101
+                        rot = <LazyRangeContainer: 101 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = False
+                        has_rot_keys = False
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 1
+                        positions = <LazyRangeContainer: 1 possible items, 0 cached>
+                        rot_key_count = 1
+                        rot = <LazyRangeContainer: 1 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+            pivot = Container: 
+                has_pivot_track = False
+                track_data = None
+        Container: 
+            name = born (total 4)
+            anim_root_name = root (total 4)
+            bone_count = 3
+            bone_names = ListContainer: 
+                b'bone001'
+                b'bone002'
+                b'root'
+            sample_fps = 30
+            loop = False
+            has_scaled = True
+            prs_flags = 7
+            accum_flags = 0
+            pack_prs_flags = 6
+            bone_separate_flags = 0
+            keys_data = Container: 
+                key_count = 25
+                key_times = ListContainer: 
+                    0.0
+                    33.54166793823242
+                    66.875
+                key_data = ListContainer: 
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 25
+                        positions = <LazyRangeContainer: 25 possible items, 0 cached>
+                        rot_key_count = 25
+                        rot = <LazyRangeContainer: 25 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 25
+                        positions = <LazyRangeContainer: 25 possible items, 0 cached>
+                        rot_key_count = 25
+                        rot = <LazyRangeContainer: 25 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = False
+                        has_rot_keys = False
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 1
+                        positions = <LazyRangeContainer: 1 possible items, 0 cached>
+                        rot_key_count = 1
+                        rot = <LazyRangeContainer: 1 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+            pivot = Container: 
+                has_pivot_track = False
+                track_data = None
+        Container: 
+            name = dead (total 4)
+            anim_root_name = root (total 4)
+            bone_count = 3
+            bone_names = ListContainer: 
+                b'bone001'
+                b'bone002'
+                b'root'
+            sample_fps = 30
+            loop = False
+            has_scaled = True
+            prs_flags = 7
+            accum_flags = 0
+            pack_prs_flags = 6
+            bone_separate_flags = 0
+            keys_data = Container: 
+                key_count = 29
+                key_times = ListContainer: 
+                    0.0
+                    33.33333206176758
+                    66.66666412353516
+                key_data = ListContainer: 
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 29
+                        positions = <LazyRangeContainer: 29 possible items, 0 cached>
+                        rot_key_count = 29
+                        rot = <LazyRangeContainer: 29 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = True
+                        has_rot_keys = True
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 29
+                        positions = <LazyRangeContainer: 29 possible items, 0 cached>
+                        rot_key_count = 29
+                        rot = <LazyRangeContainer: 29 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+                    Container: 
+                        has_pos_keys = False
+                        has_rot_keys = False
+                        has_scale_keys = False
+                        euler_flags = False
+                        position_key_count = 1
+                        positions = <LazyRangeContainer: 1 possible items, 0 cached>
+                        rot_key_count = 1
+                        rot = <LazyRangeContainer: 1 possible items, 0 cached>
+                        scale_key_count = 1
+                        scales = <LazyRangeContainer: 1 possible items, 0 cached>
+            pivot = Container: 
+                has_pivot_track = False
+                track_data = None
+    tail =  (total 0)
+每个骨骼在动画中的空间信息则保存在gis文件中。由于每个模型对应的动画数量不一致，从几个到几千范围内浮动。对于动画数量不多的模型，只存在一个gis文件，动画数量较多的模型则采用一个总的gis文件和若干子gis文件。不然所有的动画文件集中于单个gis文件，文件的尺寸可能达到几十兆，加载时间漫长且维护动画困难。总的gis文件只保存了模型所有动画的名称、时长，子gis文件则保存着具体某个动画内骨骼相对于父骨骼坐标系的空间信息、动画关键帧信息。
+文件在检查端也是转换成一个对象root数据。
+
+相对于父gis文件，子gis如图所示，比较大的区别在于anime属性。
+
+Container:
+    name = shd_start_fl (total 12)
+    root_name = biped root (total 10)
+    bone_count = 100
+    bone_name_id = ListContainer:
+        1701865826
+        100
+        0
+        0
+        0
+        0
+        0
+        .
+        .
+    sample_fps = 0
+    loop = True
+    has_scaled = True
+    prs_flags = 25968
+    accum_flags = 544350308
+    pack_prs_flags = 102
+    bone_separate_flags = 105
+    length = 4.5438147884045724e+30
+    keys_data_offset = 49
+    anim = Container:
+        name = \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00biped r finger11 (total 30)
+        anim_root_name = \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00biped r finger12 (total 30)
+        bone_count = 0
+        bone_names = ListContainer:
+        sample_fps = 0
+        loop = False
+        has_scaled = False
+        prs_flags = 0
+        accum_flags = 0
+        pack_prs_flags = 98
+        bone_separate_flags = 105
+目前支持规则包含 root，root/bone_count，root/samplefps，分别对应root, root.anim下的keys_data.key_count，root.anim.sample_fps。以及支持自定义属性root/{} 对应找到root对象的数据 规则举例:
+
+动作帧数不能大于5（父gis）
+
+xpath=.* .gis
+
+xpath=root/anim
+
+condition=['满足表达式','d < 5']
+
+filter = artfunc_checkgis_keycount
+
+def checkgis_keycount(**pdict): 
+    data = pdict.get('data',[]) 
+    try: 
+        result = data[0][0].keys_data.key_count 
+    except: 
+        return [len(data)] 
+    return [result] 
