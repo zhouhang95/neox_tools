@@ -49,8 +49,6 @@ def unpack(path):
         for i, item in enumerate(index_table):
             file_name = '{:8}.dat'.format(i)
             file_offset, file_length, file_original_length, file_flag = item
-            if file_length < 5000:
-                continue
             f.seek(file_offset)
             data = f.read(file_length)
             if file_flag & 0x10000:
@@ -61,7 +59,7 @@ def unpack(path):
                 
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['mesh', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
+            if True:
                 print('{}/{}'.format(i + 1, files))
                 file_path = folder_path + '/' + file_name
                 with open(file_path, 'wb') as dat:

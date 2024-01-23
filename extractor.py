@@ -113,8 +113,6 @@ def unpack(path, statusBar=None):
                 statusBar.showMessage('{} / {}'.format(i, files))
             file_name = '{:8}.dat'.format(i)
             file_offset, file_length, file_original_length, file_flag = item
-            if file_length < 5000:
-                continue
             f.seek(file_offset)
             data = f.read(file_length)
             if pkg_type:
@@ -124,7 +122,7 @@ def unpack(path, statusBar=None):
                 data = zlib.decompress(data)
             ext = get_ext(data)
             file_name = '{:08}.{}'.format(i, ext)
-            if ext in ['mesh', 'ktx', 'bnk', 'riff', 'pvr', 'pkm', 'dds']:
+            if True:
                 print('{}/{}'.format(i + 1, files))
                 file_path = folder_path + '/' + file_name
                 with open(file_path, 'wb') as dat:
