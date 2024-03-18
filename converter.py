@@ -144,6 +144,7 @@ def saveiqe(model, filename):
 
 def savepmx(model, filename):
     pmx_model = pmx.Model()
+    pmx_model.display_slots.append(pmx.DisplaySlot(u'表情', u'Exp', 1, None))
     pmx_model.english_name = u'Empty model'
     pmx_model.comment = u'NeoX Model Converterで生成'
     pmx_model.english_comment = u'Created by NeoX Model Converter.'
@@ -217,7 +218,7 @@ def savepmx(model, filename):
         pmx_model.materials.append(
             pmx.Material(u'Mat{}'.format(i)
                     , u'material{}'.format(i)
-                    , common.RGB(0.5, 0.5, 1)
+                    , common.RGB(1, 1, 1)
                     , 1.0
                     , 1
                     , common.RGB(1, 1, 1)
