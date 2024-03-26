@@ -55,3 +55,7 @@ File -> Load Unpack Folder
 
 
 then select the generated folder after unpacking
+
+if you search more neox game unpack, may be this work:
+https://blog.sina.com.cn/s/blog_b4721dbb0102yqoj.html
+
