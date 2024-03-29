@@ -43,7 +43,7 @@ def get_ext(data):
     elif data[:4] == b'MDMP':
         return 'mdmp'
     elif data[:4] == b'RGIS':
-        return 'rgis'
+        return 'gis'
     elif data[:4] == b'NTRK':
         return 'ntrk'
     elif data[:4] == b'RIFF':
