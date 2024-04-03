@@ -124,9 +124,7 @@ def unpack(path, statusBar=None):
             zflag = file_flag & 0xFFFF # zlib lz44
             file_flag = file_flag >> 16
 
-            if file_flag == 1:
-                data = zlib.decompress(data)
-            elif file_flag == 3:
+            if file_flag == 3:
                 b = crc ^ file_original_length
 
                 start = 0
@@ -139,7 +137,8 @@ def unpack(path, statusBar=None):
                 data = bytearray(data)
                 for j in range(size):
                     data[start + j] = data[start + j] ^ key[j % len(key)]
-
+            
+            if zflag == 1:
                 data = zlib.decompress(data)
 
             ext = get_ext(data)
