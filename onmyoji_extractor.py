@@ -2,6 +2,7 @@ import os, struct, zlib, tempfile, argparse
 from tqdm import tqdm
 import extractor as ext
 from extractor import readuint32, get_ext, get_parser
+from arc4 import ARC4
 
 def decrypt(data):
     data = bytearray(data)
@@ -27,6 +28,9 @@ def unpack(path):
         index_table = []
         with tempfile.TemporaryFile() as tmp:
             data = f.read(files * 32)
+            
+            if var3 == 3:
+                data = ARC4(b'61ea476e-8201-11e5-864b-fcaa147137b7').decrypt(data)
 
             tmp.write(data)
             tmp.seek(0)
@@ -51,6 +55,10 @@ def unpack(path):
             file_offset, file_length, file_original_length, file_flag = item
             f.seek(file_offset)
             data = f.read(file_length)
+
+            if var3 == 3:
+                data = ARC4(b'61ea476e-8201-11e5-864b-fcaa147137b7').decrypt(data)
+
             if file_flag & 0x10000:
                 data = decrypt(data)
 
